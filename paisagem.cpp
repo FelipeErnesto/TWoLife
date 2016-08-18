@@ -24,6 +24,13 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 			}
 		}
 		
+	//Gera uma matriz que determina o fragmento a que cada pixel pertence
+	int component = 0;
+	for (int i = 0; i < row_count; ++i) 
+		for (int j = 0; j < col_count; ++j) 
+			if (!label[i][j] && this->landscape[i][j]) find_patches(i, j, ++component);
+	this->num_patches = component;		
+	
 	// Calculo do raio dependendo do tipo de densidade. 0 = global, 1 = local (raio), 2 = kernel.
 	if(density_type==0)
 	{
@@ -442,4 +449,20 @@ void paisagem::atualiza_habitat(individuo * const ind) const
 	hy= ((double)ind->get_y()/this->cell_size)*(-1)+this->numb_cells/2;
 	ind->set_habitat(this->landscape[hx][hy]);
 }
+
+int* paisagem::find_patches(int x, int y, int current_label)
+{
+  if (x < 0 || x == row_count) return; // out of bounds
+  if (y < 0 || y == col_count) return; // out of bounds
+  if (label[x][y] || !m[x][y]) return; // already labeled or not marked with 1 in m
+
+  // mark the current cell
+  label[x][y] = current_label;
+
+  // recursively mark the neighbors
+  for (int direction = 0; direction < 4; ++direction)
+    dfs(x + dx[direction], y + dy[direction], current_label);
+}
+
+
 
