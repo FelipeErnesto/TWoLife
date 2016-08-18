@@ -27,6 +27,8 @@ private:
 	const int landscape_shape; // paramâmetro do modelo relacionado à forma da paisagem (por enquanto, 1 = "quadrada" ou  0 = "circular")
 	const int boundary_condition; // tipo de condição de contorno (0 = absortiva, 1 = periódica, 2 = reflexiva)
 	int landscape[dim][dim];//[linha][coluna] temporariamente substituido or valor fixo
+	int patches[dim][dim]; //Matriz com a determinação do fragmento a que cada pixel pertence. 0 para matriz; i>=1 para fragmentos
+	int num_patches; //Número de fragmentos encontradas. Desconsidera-se a matriz.
 	const int initialPos;
 	
 	//metodos privados
@@ -124,6 +126,8 @@ public:
     /** Retorna false se o indivíduo estava no ambiente no passod de tempo 0, e true se ele nasceu durante a simulação.
 	 * Usado para pintar os indivíduos nascidos de um cor diferente dos individuos originais */
     const bool nascido(individuo * const ind) const {return ind->get_id() > this->N;}
+    
+    int* find_patches(int x, int y, int current_label);
 
 };
 
