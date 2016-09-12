@@ -33,6 +33,7 @@ private:
     vector<individuo*> lisViz;//vetor de vizinhanca    ----//CAMADA PERCEPTIVA
     const double taxa_basal;//taxa intrínseca de nascimento quando no habitat e na ausencia de outros individuos na vizinhanca local
     int tipo_habitat;//CAMADA PERCEPTIVA
+    int patch_label; //Identificdor do fragmento no qual está o indivíduo. 0 = matriz; 1, 2, ... = fragmentos de habitat
     const int semente;//semente para gerar os numeros aleatorios
 	
 	double death;// taxa de morte
@@ -90,6 +91,8 @@ public:
     void set_vizinhos (/** Lista dos vizinhos */ const vector<individuo*> lis){this->lisViz=lis;}
 	/** Atualiza o tipo de hábitat no qual o indivíduo está. Deve ser chamada a cada passo de tempo pela \ref paisagem. */
     void set_habitat (const int tipo){this->tipo_habitat=tipo;}
+    /** Atualiza o fragmento do indivíduo */
+    void set_patch (const int label){this->patch_label=label;}
 	/** Atualiza a posi√ß√£o X do invid√≠duo */
     void set_x(/** Nova posi√ß√£o */double i){this->x =i;}
 	/** Atualiza a posi√ß√£o Y do invid√≠duo */
