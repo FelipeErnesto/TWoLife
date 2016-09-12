@@ -129,6 +129,7 @@ int paisagem::update()
         {
             this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
             this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
+            this->atualiza_patch(this->popIndividuos[i]);//atualiza o fragmento atual
         }
 		// Este loop não é parelelizado, APESAR de ser independente, para garantir que as funcoes
 		// aleatorias sao chamadas sempre na mesma ordem (garante reprodutibilidade)
@@ -448,6 +449,14 @@ void paisagem::atualiza_habitat(individuo * const ind) const
 	hx= (double)ind->get_x()/this->cell_size+this->numb_cells/2;
 	hy= ((double)ind->get_y()/this->cell_size)*(-1)+this->numb_cells/2;
 	ind->set_habitat(this->landscape[hx][hy]);
+}
+
+void paisagem::atualiza_patch(individuo * const ind) const
+{
+	int hx,hy;
+	hx= (double)ind->get_x()/this->cell_size+this->numb_cells/2;
+	hy= ((double)ind->get_y()/this->cell_size)*(-1)+this->numb_cells/2;
+	ind->set_patch(this->patches[hx][hy]);
 }
 
 void paisagem::find_patches(int x, int y, int current_label)
