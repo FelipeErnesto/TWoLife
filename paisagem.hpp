@@ -58,6 +58,7 @@ private:
 					
     void atualiza_vizinhos(individuo * const ind) const;//contabilizador de vizinhos
     void atualiza_habitat(individuo * const i) const;//vai informar o individuo em que tipo de habitat ele esta
+    void atualiza_patch(individuo * const ind) const;//vai informar o individuo em que fragmento ele esta AVISO: função acima está recebendo cont i, mudar?
     //int define_tempo();
 	void apply_boundary(individuo * const ind); //const; // metodo para aplicação da condicao de contorno
     		
