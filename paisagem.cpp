@@ -30,7 +30,7 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 		for (int l = 0; l < this->numb_cells; ++l) 
 			if (!this->patches[k][l] && this->landscape[k][l]) find_patches(k, l, ++component);
 	this->numb_patches = component;
-	this->migracao = new int[this->numb_patches];
+	this->migracao = new int[this->numb_patches+1];
 	
 	// Calculo do raio dependendo do tipo de densidade. 0 = global, 1 = local (raio), 2 = kernel.
 	if(density_type==0)
@@ -131,6 +131,7 @@ int paisagem::update()
             this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
             this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
             this->atualiza_patch(this->popIndividuos[i]);//atualiza o fragmento atual
+            this->verifica_migracao()
         }
 		// Este loop não é parelelizado, APESAR de ser independente, para garantir que as funcoes
 		// aleatorias sao chamadas sempre na mesma ordem (garante reprodutibilidade)
@@ -461,6 +462,13 @@ void paisagem::atualiza_patch(individuo * const ind) const
 		ind->set_patch(this->patches[hx][hy]);
 }
 
+
+void atualiza_migracao(individuo * const ind) const
+{
+	if(ind->get_patch != ind->get_last_patch)
+		this->migracao[]
+}
+
 void paisagem::find_patches(int x, int y, int current_label)
 {
   if (x < 0 || x == this->numb_cells) return; // out of bounds
@@ -476,6 +484,5 @@ void paisagem::find_patches(int x, int y, int current_label)
   find_patches(x - 1, y, current_label);
   find_patches(x, y - 1, current_label);
 }
-
 
 
