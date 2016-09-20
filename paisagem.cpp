@@ -31,6 +31,8 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 			if (!this->patches[k][l] && this->landscape[k][l]) find_patches(k, l, ++component);
 	this->numb_patches = component;
 	this->migracao = new int[this->numb_patches+1];
+	this->patch_pop = new int[this->numb_patches+1];
+	this->extincao = new int[this->numb_patches+1];
 	
 	// Calculo do raio dependendo do tipo de densidade. 0 = global, 1 = local (raio), 2 = kernel.
 	if(density_type==0)
@@ -39,6 +41,11 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 	}
 	/* Coloca os indivíduos na paisagem por meio da função populating() */	
 	this->populating(raio,N,angulo_visada,passo,move,taxa_basal,taxa_morte,incl_b,incl_d,death_mat,density_type);
+	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
+        {
+            this->atualiza_patch(this->popIndividuos[i]);//atualiza o fragmento atual
+            this->patch_pop[this->popIndividuos[i]->get_patch()] += 1;
+        }
 	
 }
 		
@@ -178,8 +185,8 @@ void paisagem::realiza_acao(int lower) //TODO : criar matriz de distancias como 
 
     case 2: 
         this->popIndividuos[lower]->anda();
-		this->apply_boundary(popIndividuos[lower]);
-		break;
+	this->apply_boundary(popIndividuos[lower]);
+	break;
     }
 }
 
@@ -465,8 +472,10 @@ void paisagem::atualiza_patch(individuo * const ind) const
 
 void atualiza_migracao(individuo * const ind) const
 {
-	if(ind->get_patch != ind->get_last_patch)
-		this->migracao[]
+	if(ind->get_patch() != ind->get_last_patch() && ind->get_last_patch())
+		this->migracao[ind->get_patch()] += 1;
+	else if(ind->get_patch() == ind->get_last_patch() && ind->get_last_patch())
+		this->migracao[0] += 1;
 }
 
 void paisagem::find_patches(int x, int y, int current_label)
