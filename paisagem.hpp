@@ -30,6 +30,7 @@ private:
 	int patches[dim][dim]; //Matriz com a determinação do fragmento a que cada pixel pertence. 0 para matriz; i>=1 para fragmentos
 	int numb_patches; //Número de fragmentos encontrados. Desconsidera-se a matriz.
 	int* migracao;
+	int* patch_pop;
 	const int initialPos;
 	
 	//metodos privados
