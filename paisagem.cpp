@@ -138,8 +138,10 @@ int paisagem::update()
             this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
             this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
             this->atualiza_patch(this->popIndividuos[i]);//atualiza o fragmento atual
-            this->verifica_migracao()
+            this->atualiza_migracao(this->popIndividuos[i]);
         }
+        
+        this->atualiza_extincao();
 		// Este loop não é parelelizado, APESAR de ser independente, para garantir que as funcoes
 		// aleatorias sao chamadas sempre na mesma ordem (garante reprodutibilidade)
         for(unsigned int i=0; i<this->popIndividuos.size(); i++)
@@ -476,6 +478,27 @@ void atualiza_migracao(individuo * const ind) const
 		this->migracao[ind->get_patch()] += 1;
 	else if(ind->get_patch() == ind->get_last_patch() && ind->get_last_patch())
 		this->migracao[0] += 1;
+}
+
+void atualiza_extincao(individuo * const ind) const
+{
+	int* popPatch = new int[this->extincao.size()] 
+	int cont = 0;
+	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
+        {
+        	if(this->popIndividuos[i]->get_patch() > 0)
+        	{
+        		popPatch[this->popIndividuos[i]->get_patch()] +=1;
+        		cont+=1;
+        	}
+        	popPatch[0]=<this->popIndividuos.size()-cont;
+        }
+        for(unsigned int j=0; j<this->popIndividuos.size(); j++)
+        {
+        	if(this->patch_pop[j]!=popPatch[j] && popPatch==0)
+        		extincao[j] += 1;
+        	this->patch_pop[j] = patchPop[j];
+        }
 }
 
 void paisagem::find_patches(int x, int y, int current_label)
