@@ -55,18 +55,31 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 		outputSIM << floresta->tempo_do_mundo << " " << floresta->get_individuos(i)->get_id() << " " << floresta->get_individuos(i)->get_x() << " " << floresta->get_individuos(i)->get_y() << endl;
 	}
 	
+	double t_ant = floresta->tempo_do_mundo;
+	int lowerInd=floresta->update();
+	if(t_ant < (int)floresta->tempo_do_mundo)
+	{
+		for(unsigned int i=0; i<floresta->conta_individuos();i++)
+		{
+			outputSIM << (int)floresta->tempo_do_mundo << " " << floresta->get_individuos(i)->get_id() << " " << floresta->get_individuos(i)->get_x() << " " << floresta->get_individuos(i)->get_y() << endl;
+		}
+	}
+	
 	while (floresta->tempo_do_mundo < tempo[0] && floresta->conta_individuos() > 0)
 	{
-		double t_ant = floresta->tempo_do_mundo;
-		int lowerInd=floresta->update();
+		
+		individuo* neo = sorteia_individuo();
+		int acao = sorteia_acao(neo);
+		floresta->realiza_acao(acao);
+		t_ant = floresta->tempo_do_mundo;
+		lowerInd=floresta->update(acao);
 		if(t_ant < (int)floresta->tempo_do_mundo)
 		{
 			for(unsigned int i=0; i<floresta->conta_individuos();i++)
 			{
 				outputSIM << (int)floresta->tempo_do_mundo << " " << floresta->get_individuos(i)->get_id() << " " << floresta->get_individuos(i)->get_x() << " " << floresta->get_individuos(i)->get_y() << endl;
 			}
-		}
-		floresta->realiza_acao(lowerInd);		
+		}		
 	}
 	if(floresta->conta_individuos()==0){outputSIM << floresta->tempo_do_mundo << " " << "NA" << " " << "NA" << " " << "NA" << endl;}
 	outputSIM.close(); //end of output file
