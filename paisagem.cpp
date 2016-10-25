@@ -125,7 +125,7 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 	}	
 }
 
-int paisagem::update()
+int paisagem::update(int acao)
 {
     if(this->popIndividuos.size()>0)
     {    
@@ -134,60 +134,79 @@ int paisagem::update()
 	#pragma omp parallel for
 	#endif
         for(unsigned int i=0; i<this->popIndividuos.size(); i++)
-        {
+        {//Falta colocar esta função nos if aqui embaixo
             this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
-            this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
-            this->atualiza_patch(this->popIndividuos[i]);//atualiza o fragmento atual
-            this->atualiza_migracao(this->popIndividuos[i]);
         }
-        
-        this->atualiza_extincao();
+	
+	if(acao == 0)
+		this->atualiza_extincao();
+	if(acao == 1)
+	{
+		this->atualiza_habitat(this->popIndividuos[sortudo]);//retorna o tipo de habitat
+        	this->initialize_patch(this->popIndividuos[sortudo]);//atualiza o fragmento atual
+	}
+	if(acao == 2)
+	{
+		this->atualiza_habitat(this->popIndividuos[sortudo]);//retorna o tipo de habitat
+		int last_patch = this->popIndividuos[sortudo]->get_patch(0);
+        	this->atualiza_patch(this->popIndividuos[sortudo]);//atualiza o fragmento atual
+		if(last_patch != this->popIndividuos[sortudo]->get_patch(0);)
+        		this->atualiza_migracao(this->popIndividuos[sortudo]);
+        	this->atualiza_extincao();
+	}
 		// Este loop não é parelelizado, APESAR de ser independente, para garantir que as funcoes
 		// aleatorias sao chamadas sempre na mesma ordem (garante reprodutibilidade)
         for(unsigned int i=0; i<this->popIndividuos.size(); i++)
         {
 			double dsty=this->calcDensity(popIndividuos[i]);
             this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
-        }
-		
-		// time for next event and simulation time update
-		int menor=0;
-		double menor_tempo = this->popIndividuos[0]->get_tempo();
-		
-		for(unsigned int i=1; i<this->popIndividuos.size(); i++)
-		{
-			if(this->popIndividuos[i]->get_tempo()<menor_tempo)
-			{
-				menor = i;
-				menor_tempo = this->popIndividuos[i]->get_tempo();
-			}
-		}
-		this->tempo_do_mundo = this->tempo_do_mundo+menor_tempo;
-		return menor;
-	}
+        Á
+	
+	this->tempo_do_mundo = this->tempo_do_mundo+menor_tempo;//Corrigir AAAAAAAAA
+    }
 }
 
-void paisagem::realiza_acao(int lower) //TODO : criar matriz de distancias como atributo do mundo e atualiza-la apenas quanto ao individuos afetado nesta funcao)
+indivíduo* sorteia_individuo()
 {
-	int acao = this->popIndividuos[lower]->sorteia_acao();
+	individuo* chosen;
+	// time for next event and simulation time update
+	int menor=0;
+	double menor_tempo = this->popIndividuos[0]->get_tempo();
+	
+	for(unsigned int i=1; i<this->popIndividuos.size(); i++)
+	{
+		if(this->popIndividuos[i]->get_tempo()<menor_tempo)
+		{
+			menor = i;
+			menor_tempo = this->popIndividuos[i]->get_tempo();
+		}
+	}
+	
+	chosen = new individuo(*this->popIndividuos[menor]);
+	this->sortudo = 
+	return chosen;
+}
 
+void paisagem::realiza_acao(int acao) //TODO : criar matriz de distancias como atributo do mundo e atualiza-la apenas quanto ao individuos afetado nesta funcao)
+{
     switch(acao) //0 eh morte, 1 eh nascer, 2 eh andar
     {
     case 0:
-        delete this->popIndividuos[lower];
-        this->popIndividuos.erase(this->popIndividuos.begin()+lower);
+	patch_pop[this->popIndividuos[sortudo]->get_patch(0)] -=1;
+        delete this->popIndividuos[sortudo];
+        this->popIndividuos.erase(this->popIndividuos.begin()+sortudo);
         break;
 
     case 1:
         individuo* chosen;
         //Novo metodo para fazer copia do individuo:
-        chosen = new individuo(*this->popIndividuos[lower]);
+        chosen = new individuo(*this->popIndividuos[sortudo]);
         this->popIndividuos.push_back(chosen);
         break;
 
     case 2: 
-        this->popIndividuos[lower]->anda();
-	this->apply_boundary(popIndividuos[lower]);
+        this->popIndividuos[sortudo]->anda();
+	this->apply_boundary(popIndividuos[sortudo]);
 	break;
     }
 }
@@ -467,17 +486,19 @@ void paisagem::atualiza_patch(individuo * const ind) const
 	int hx,hy;
 	hx= (double)ind->get_x()/this->cell_size+this->numb_cells/2;
 	hy= ((double)ind->get_y()/this->cell_size)*(-1)+this->numb_cells/2;
-	if(this->patches[hx][hy] > 0)
+	if(this->patches[hx][hy] != ind->get_patch(0))
 		ind->set_patch(this->patches[hx][hy]);
 }
 
-
 void atualiza_migracao(individuo * const ind) const
-{
-	if(ind->get_patch() != ind->get_last_patch() && ind->get_last_patch())
-		this->migracao[ind->get_patch()] += 1;
-	else if(ind->get_patch() == ind->get_last_patch() && ind->get_last_patch())
-		this->migracao[0] += 1;
+{//Ainda poderia armazenar o caso ind->get_patch(1)>0, mas o que significa e pra que serviria?
+	if(ind->get_patch(2)>=0)
+	{
+		if(ind->get_patch(0) != ind->get_patch(2))
+			this->migracao[ind->get_patch(0)] += 1;
+		else if(!ind->get_patch(1))
+			this->migracao[0] += 1;
+	}
 }
 
 void atualiza_extincao(individuo * const ind) const
