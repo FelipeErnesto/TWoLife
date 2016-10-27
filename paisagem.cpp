@@ -125,7 +125,7 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 	}	
 }
 
-int paisagem::update(int acao)
+int paisagem::update(int acao, individuo* chosen)
 {
     if(this->popIndividuos.size()>0)
     {    
@@ -134,25 +134,33 @@ int paisagem::update(int acao)
 	#pragma omp parallel for
 	#endif
         for(unsigned int i=0; i<this->popIndividuos.size(); i++)
-        {//Falta colocar esta função nos if aqui embaixo
+        {//Falta colocar esta função nos if aqui embaixo, usando matriz de distâncias
             this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
         }
 	
 	if(acao == 0)
-		this->atualiza_extincao();
+	{
+		this->patch_pop[chosen->get_patch(0)] -= 1;
+		this->atualiza_extincao(chosen->get_patch(0));
+	}
 	if(acao == 1)
 	{
 		this->atualiza_habitat(this->popIndividuos[sortudo]);//retorna o tipo de habitat
         	this->initialize_patch(this->popIndividuos[sortudo]);//atualiza o fragmento atual
+		this->patch_pop[this->popIndividuos[sortudo]->get_patch(0)] += 1;
 	}
 	if(acao == 2)
 	{
 		this->atualiza_habitat(this->popIndividuos[sortudo]);//retorna o tipo de habitat
 		int last_patch = this->popIndividuos[sortudo]->get_patch(0);
         	this->atualiza_patch(this->popIndividuos[sortudo]);//atualiza o fragmento atual
-		if(last_patch != this->popIndividuos[sortudo]->get_patch(0);)
+		if(last_patch != this->popIndividuos[sortudo]->get_patch(0))
+		{
         		this->atualiza_migracao(this->popIndividuos[sortudo]);
-        	this->atualiza_extincao();
+			this->patch_pop[last_patch] -= 1;
+			this->patch_pop[this->popIndividuos[sortudo]->get_patch(0)] += 1;
+        		this->atualiza_extincao(last_patch);
+		}
 	}
 		// Este loop não é parelelizado, APESAR de ser independente, para garantir que as funcoes
 		// aleatorias sao chamadas sempre na mesma ordem (garante reprodutibilidade)
@@ -160,12 +168,12 @@ int paisagem::update(int acao)
         {
 			double dsty=this->calcDensity(popIndividuos[i]);
             this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
-        Á
+	}
 	
-	this->tempo_do_mundo = this->tempo_do_mundo+menor_tempo;//Corrigir AAAAAAAAA
+	this->tempo_do_mundo = this->tempo_do_mundo+chosen->get_tempo();
     }
 }
-
+	
 indivíduo* sorteia_individuo()
 {
 	individuo* chosen;
@@ -183,7 +191,7 @@ indivíduo* sorteia_individuo()
 	}
 	
 	chosen = new individuo(*this->popIndividuos[menor]);
-	this->sortudo = 
+	this->sortudo = menor;
 	return chosen;
 }
 
@@ -501,25 +509,10 @@ void atualiza_migracao(individuo * const ind) const
 	}
 }
 
-void atualiza_extincao(individuo * const ind) const
+void atualiza_extincao(int label) const
 {
-	int* popPatch = new int[this->extincao.size()] 
-	int cont = 0;
-	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
-        {
-        	if(this->popIndividuos[i]->get_patch() > 0)
-        	{
-        		popPatch[this->popIndividuos[i]->get_patch()] +=1;
-        		cont+=1;
-        	}
-        	popPatch[0]=<this->popIndividuos.size()-cont;
-        }
-        for(unsigned int j=0; j<this->popIndividuos.size(); j++)
-        {
-        	if(this->patch_pop[j]!=popPatch[j] && popPatch==0)
-        		extincao[j] += 1;
-        	this->patch_pop[j] = patchPop[j];
-        }
+	if(patch_pop[label] == 0)
+		extincao[label]+=1;
 }
 
 void paisagem::find_patches(int x, int y, int current_label)
