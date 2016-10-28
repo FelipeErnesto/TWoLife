@@ -200,7 +200,6 @@ void paisagem::realiza_acao(int acao) //TODO : criar matriz de distancias como a
     switch(acao) //0 eh morte, 1 eh nascer, 2 eh andar
     {
     case 0:
-	patch_pop[this->popIndividuos[sortudo]->get_patch(0)] -=1;
         delete this->popIndividuos[sortudo];
         this->popIndividuos.erase(this->popIndividuos.begin()+sortudo);
         break;
