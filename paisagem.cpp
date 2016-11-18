@@ -174,9 +174,8 @@ int paisagem::update(int acao, individuo* chosen)
     }
 }
 	
-indivíduo* sorteia_individuo()
+int sorteia_individuo()
 {
-	individuo* chosen;
 	// time for next event and simulation time update
 	int menor=0;
 	double menor_tempo = this->popIndividuos[0]->get_tempo();
@@ -189,31 +188,34 @@ indivíduo* sorteia_individuo()
 			menor_tempo = this->popIndividuos[i]->get_tempo();
 		}
 	}
-	
-	chosen = new individuo(*this->popIndividuos[menor]);
-	this->sortudo = menor;
+	return menor;
+}
+
+individuo* copy_individuos(int ind)
+{
+	individuo* chosen = new individuo(*this->popIndividuos[ind]);
 	return chosen;
 }
 
-void paisagem::realiza_acao(int acao) //TODO : criar matriz de distancias como atributo do mundo e atualiza-la apenas quanto ao individuos afetado nesta funcao)
+void paisagem::realiza_acao(int acao, lower) //TODO : criar matriz de distancias como atributo do mundo e atualiza-la apenas quanto ao individuos afetado nesta funcao)
 {
     switch(acao) //0 eh morte, 1 eh nascer, 2 eh andar
     {
     case 0:
-        delete this->popIndividuos[sortudo];
-        this->popIndividuos.erase(this->popIndividuos.begin()+sortudo);
+        delete this->popIndividuos[lower];
+        this->popIndividuos.erase(this->popIndividuos.begin()+lower);
         break;
 
     case 1:
         individuo* chosen;
         //Novo metodo para fazer copia do individuo:
-        chosen = new individuo(*this->popIndividuos[sortudo]);
+        chosen = new individuo(*this->popIndividuos[lower]);
         this->popIndividuos.push_back(chosen);
         break;
 
     case 2: 
-        this->popIndividuos[sortudo]->anda();
-	this->apply_boundary(popIndividuos[sortudo]);
+        this->popIndividuos[lower]->anda();
+	this->apply_boundary(popIndividuos[lower]);
 	break;
     }
 }
