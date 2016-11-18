@@ -125,7 +125,7 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 	}	
 }
 
-int paisagem::update(int acao, individuo* chosen)
+int paisagem::update(int acao, individuo* chosen, int ind_chosen)
 {
     if(this->popIndividuos.size()>0)
     {    
@@ -145,20 +145,20 @@ int paisagem::update(int acao, individuo* chosen)
 	}
 	if(acao == 1)
 	{
-		this->atualiza_habitat(this->popIndividuos[sortudo]);//retorna o tipo de habitat
-        	this->initialize_patch(this->popIndividuos[sortudo]);//atualiza o fragmento atual
-		this->patch_pop[this->popIndividuos[sortudo]->get_patch(0)] += 1;
+		this->atualiza_habitat(this->popIndividuos[ind_chosen]);//retorna o tipo de habitat
+        	this->initialize_patch(this->popIndividuos[ind_chosen]);//atualiza o fragmento atual
+		this->patch_pop[this->popIndividuos[ind_chosen]->get_patch(0)] += 1;
 	}
 	if(acao == 2)
 	{
-		this->atualiza_habitat(this->popIndividuos[sortudo]);//retorna o tipo de habitat
-		int last_patch = this->popIndividuos[sortudo]->get_patch(0);
-        	this->atualiza_patch(this->popIndividuos[sortudo]);//atualiza o fragmento atual
-		if(last_patch != this->popIndividuos[sortudo]->get_patch(0))
+		this->atualiza_habitat(this->popIndividuos[ind_chosen]);//retorna o tipo de habitat
+		int last_patch = this->popIndividuos[ind_chosen]->get_patch(0);
+        	this->atualiza_patch(this->popIndividuos[ind_chosen]);//atualiza o fragmento atual
+		if(last_patch != this->popIndividuos[ind_chosen]->get_patch(0))
 		{
-        		this->atualiza_migracao(this->popIndividuos[sortudo]);
+        		this->atualiza_migracao(this->popIndividuos[ind_chosen]);
 			this->patch_pop[last_patch] -= 1;
-			this->patch_pop[this->popIndividuos[sortudo]->get_patch(0)] += 1;
+			this->patch_pop[this->popIndividuos[ind_chosen]->get_patch(0)] += 1;
         		this->atualiza_extincao(last_patch);
 		}
 	}
@@ -192,12 +192,12 @@ int sorteia_individuo()
 }
 
 individuo* copy_individuos(int ind)
-{
+{//Esta função faz uso do construtor individuo(individuo), utilizado para nascimentos. Se o construtor for alterado para gerar novos individuos com características "infantis", esta função deverá ser alterada.
 	individuo* chosen = new individuo(*this->popIndividuos[ind]);
 	return chosen;
 }
 
-void paisagem::realiza_acao(int acao, lower) //TODO : criar matriz de distancias como atributo do mundo e atualiza-la apenas quanto ao individuos afetado nesta funcao)
+void paisagem::realiza_acao(int acao, int lower) //TODO : criar matriz de distancias como atributo do mundo e atualiza-la apenas quanto ao individuos afetado nesta funcao)
 {
     switch(acao) //0 eh morte, 1 eh nascer, 2 eh andar
     {
