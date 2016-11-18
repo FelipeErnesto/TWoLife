@@ -69,10 +69,10 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 	{
 		int ind_neo = floresta->sorteia_individuo();
 		individuo* neo = copy_individuos(ind_neo);
-		int acao = floresta->sorteia_acao(neo, ind_neo);
-		floresta->realiza_acao(acao);
+		int acao = floresta->sorteia_acao(ind_neo);
+		floresta->realiza_acao(acao, ind_neo);
 		t_ant = floresta->tempo_do_mundo;
-		floresta->update(acao, neo);
+		floresta->update(acao, neo, ind_neo);
 		if(t_ant < (int)floresta->tempo_do_mundo)
 		{
 			for(unsigned int i=0; i<floresta->conta_individuos();i++)
