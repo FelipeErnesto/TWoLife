@@ -122,7 +122,7 @@ public:
     const int conta_individuos() const{return popIndividuos.size();}
 	/** Retorna um vetor contendo todos os indivíduos na paisagem */
     individuo* get_individuos(int i) const {return popIndividuos[i];}
-	individuo* copy_individuos(int ind) const {}
+	individuo copy_individuos(int ind) const {}
 	/** Retorna o número de espécies existentes na paisagem \ref TBI */
     const int conta_especies() const;
 	/** Retorna o tamanho da paisagem (definido no construtor) */
