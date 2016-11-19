@@ -60,8 +60,9 @@ private:
 					);
 					
     void atualiza_vizinhos(individuo * const ind) const;//contabilizador de vizinhos
-    void atualiza_habitat(individuo * const i) const;//vai informar o individuo em que tipo de habitat ele esta
-    void atualiza_patch(individuo * const ind) const;//vai informar o individuo em que fragmento ele esta AVISO: função acima está recebendo cont i, mudar?
+    void atualiza_habitat(individuo * const ind) const;//vai informar o individuo em que tipo de habitat ele esta
+    void initialize_patch(individuo * const ind) const;//Vai informar o indivíduo recém criado em que fragmento ele está
+    void atualiza_patch(individuo * const ind) const;//vai informar o individuo em que fragmento ele está
     void atualiza_migracao(individuo * const ind) const;
     void atualiza_extincao(individuo * const ind) const;
     //int define_tempo();
