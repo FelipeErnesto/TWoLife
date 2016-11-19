@@ -15,14 +15,14 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 	boundary_condition(bound_condition),
 	initialPos(inipos)
 {	
-		for(int i=0;i<this->numb_cells;i++)
+	for(int i=0;i<this->numb_cells;i++)
+	{
+		for(int j=0;j<this->numb_cells;j++)
 		{
-			for(int j=0;j<this->numb_cells;j++)
-			{
-				// transforma o vetor scape recebido do construtor em uma matriz
-				this->landscape[i][j]=scape[j*numb_cells+i];
-			}
+			// transforma o vetor scape recebido do construtor em uma matriz
+			this->landscape[i][j]=scape[j*numb_cells+i];
 		}
+	}
 		
 	//Atribui valores à matriz patches, que determina o fragmento a que cada pixel pertence
 	int component = 0;
@@ -41,11 +41,21 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 	}
 	/* Coloca os indivíduos na paisagem por meio da função populating() */	
 	this->populating(raio,N,angulo_visada,passo,move,taxa_basal,taxa_morte,incl_b,incl_d,death_mat,density_type);
+
 	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
-        {
-            this->atualiza_patch(this->popIndividuos[i]);//atualiza o fragmento atual
-            this->patch_pop[this->popIndividuos[i]->get_patch()] += 1;
+	{
+		this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
+		this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
+		this->atualiza_patch(this->popIndividuos[i]);//inicia o indice do fragmento fragmento
+		this->patch_pop[this->popIndividuos[i]->get_patch()] += 1;
         }
+
+
+	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
+	{
+		double dsty=this->calcDensity(popIndividuos[i]);
+		this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
+	}
 	
 }
 		
