@@ -509,6 +509,15 @@ void paisagem::atualiza_patch(individuo * const ind) const
 		ind->set_patch(this->patches[hx][hy]);
 }
 
+void paisagem::initialize_patch(individuo * const ind) const
+{
+	int hx,hy;
+	hx= (double)ind->get_x()/this->cell_size+this->numb_cells/2;
+	hy= ((double)ind->get_y()/this->cell_size)*(-1)+this->numb_cells/2;
+	if(this->patches[hx][hy] != ind->get_patch(0))
+		ind->initialize_patch(this->patches[hx][hy]);
+}
+
 void atualiza_migracao(individuo * const ind) const
 {//Ainda poderia armazenar o caso ind->get_patch(1)>0, mas o que significa e pra que serviria?
 	if(ind->get_patch(2)>=0)
