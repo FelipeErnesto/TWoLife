@@ -114,10 +114,10 @@ public:
 			); //construtor
 
 	/** Atualiza as variáveis de todos os indivíduos (ver individuo::set_vizinhos, individuo::set_habitat e individuo::update) e escolhe uma ação para ser executada. Executa a ação e atualiza o tempo do mundo de acordo \sa \ref Introdução */
-    int update();//atualizador
-    individuo* sorteia_individuo();
+    int update(int acao, individuo chosen, int ind_chosen);//atualizador
+    int sorteia_individuo();
     int sorteia_acao(const int lower){return this->popIndividuos[lower]->sorteia_acao();}
-	void realiza_acao(int lower, int acao);//vai pegar os tempos de cada individuo e informa qual foi o escolhido e manda ele fazer
+	void realiza_acao(int acao, int lower);//vai pegar os tempos de cada individuo e informa qual foi o escolhido e manda ele fazer
 	/** Retorna o número total de indivíduos na paisagem */
     const int conta_individuos() const{return popIndividuos.size();}
 	/** Retorna um vetor contendo todos os indivíduos na paisagem */
