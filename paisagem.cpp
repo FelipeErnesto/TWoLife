@@ -46,7 +46,7 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 	{
 		this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
 		this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
-		this->atualiza_patch(this->popIndividuos[i]);//inicia o indice do fragmento fragmento
+		this->initialize_patch(this->popIndividuos[i]);//inicia o indice do fragmento fragmento
 		this->patch_pop[this->popIndividuos[i]->get_patch()] += 1;
         }
 
