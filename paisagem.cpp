@@ -201,9 +201,9 @@ int sorteia_individuo()
 	return menor;
 }
 
-individuo* copy_individuos(int ind)
+individuo copy_individuos(int ind)
 {//Esta função faz uso do construtor individuo(individuo), utilizado para nascimentos. Se o construtor for alterado para gerar novos individuos com características "infantis", esta função deverá ser alterada.
-	individuo* chosen = new individuo(*this->popIndividuos[ind]);
+	individuo chosen = new individuo(*this->popIndividuos[ind]);
 	return chosen;
 }
 
