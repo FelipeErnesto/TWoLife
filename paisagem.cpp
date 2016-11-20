@@ -184,7 +184,7 @@ int paisagem::update(int acao, individuo chosen, int ind_chosen)
     }
 }
 	
-int sorteia_individuo()
+int paisagem::sorteia_individuo()
 {
 	// time for next event and simulation time update
 	int menor=0;
@@ -201,7 +201,7 @@ int sorteia_individuo()
 	return menor;
 }
 
-individuo copy_individuos(int ind)
+individuo paisagem::copy_individuos(int ind)
 {//Esta função faz uso do construtor individuo(individuo), utilizado para nascimentos. Se o construtor for alterado para gerar novos individuos com características "infantis", esta função deverá ser alterada.
 	individuo chosen(*this->popIndividuos[ind]);
 	return chosen;
@@ -518,7 +518,7 @@ void paisagem::initialize_patch(individuo * const ind) const
 		ind->initialize_patch(this->patches[hx][hy]);
 }
 
-void atualiza_migracao(individuo * const ind) const
+void paisagem::atualiza_migracao(individuo * const ind) const
 {//Ainda poderia armazenar o caso ind->get_patch(1)>0, mas o que significa e pra que serviria?
 	if(ind->get_patch(2)>=0)
 	{
@@ -529,7 +529,7 @@ void atualiza_migracao(individuo * const ind) const
 	}
 }
 
-void atualiza_extincao(int label) const
+void paisagem::atualiza_extincao(int label) const
 {
 	if(patch_pop[label] == 0)
 		extincao[label]+=1;
