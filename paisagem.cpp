@@ -180,7 +180,7 @@ int paisagem::update(int acao, individuo chosen, int ind_chosen)
             this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
 	}
 	
-	this->tempo_do_mundo = this->tempo_do_mundo+chosen->get_tempo();
+	this->tempo_do_mundo = this->tempo_do_mundo+chosen.get_tempo();
     }
 }
 	
