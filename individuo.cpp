@@ -56,8 +56,7 @@ individuo::individuo(double x, double y, int especie, double taxa_morte,
 		this->densi_max = (taxa_basal-taxa_morte)/(incl_b+incl_d);
 		this->birth_death_eq = taxa_morte+incl_d*((taxa_basal-taxa_morte)/(incl_b+incl_d));
 	}
-	
-	this->patch_label = new int[3];
+
 	//cout << this->raio << endl;
 }
 
