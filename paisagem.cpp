@@ -135,7 +135,7 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 	}	
 }
 
-int paisagem::update(int acao, individuo chosen, int ind_chosen)
+void paisagem::update(int acao, individuo chosen, int ind_chosen)
 {
     if(this->popIndividuos.size()>0)
     {    
