@@ -33,7 +33,7 @@ private:
     vector<individuo*> lisViz;//vetor de vizinhanca    ----//CAMADA PERCEPTIVA
     const double taxa_basal;//taxa intrínseca de nascimento quando no habitat e na ausencia de outros individuos na vizinhanca local
     int tipo_habitat;//CAMADA PERCEPTIVA
-    int* patch_label; //Identificdor do fragmento no qual está o indivíduo ([0]) e nos quais passou ([1] e [2]) . 0 = matriz; 1, 2, ... = fragmentos de habitat
+    int patch_label[3]; //Identificdor do fragmento no qual está o indivíduo ([0]) e nos quais passou ([1] e [2]) . 0 = matriz; 1, 2, ... = fragmentos de habitat
     const int semente;//semente para gerar os numeros aleatorios
 	
 	double death;// taxa de morte
