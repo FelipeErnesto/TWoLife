@@ -150,8 +150,8 @@ int paisagem::update(int acao, individuo chosen, int ind_chosen)
 	
 	if(acao == 0)
 	{
-		this->patch_pop[chosen->get_patch(0)] -= 1;
-		this->atualiza_extincao(chosen->get_patch(0));
+		this->patch_pop[chosen.get_patch(0)] -= 1;
+		this->atualiza_extincao(chosen.get_patch(0));
 	}
 	if(acao == 1)
 	{
