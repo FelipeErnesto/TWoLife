@@ -110,7 +110,7 @@ public:
 	/** Returns the number of individuals inside the neighbourhood of the individual (it includes the focal individual) */
     const int NBHood_size() const {return this->lisViz.size()+1;}
     	/** Retorna o fragmento do indivíduo, sendo 0 o fragmento atual, 1 o último antes do atual, 2 o penúltimo antes do atual */
-    const int get_patch(int i) const {return this->patch_label[i];}
+    const int get_patch(const int i) const {return this->patch_label[i];}
 
     // outros metodos publicos
 	/** Retorna o tempo sorteado para o próximo evento acontecer com este indivíduo.
