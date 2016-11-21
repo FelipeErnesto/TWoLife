@@ -135,7 +135,7 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 	}	
 }
 
-void paisagem::update(int acao, individuo chosen, int ind_chosen)
+void paisagem::update(int acao, individuo* chosen, int ind_chosen)
 {
     if(this->popIndividuos.size()>0)
     {    
@@ -150,8 +150,8 @@ void paisagem::update(int acao, individuo chosen, int ind_chosen)
 	
 	if(acao == 0)
 	{
-		this->patch_pop[chosen.get_patch(0)] -= 1;
-		this->atualiza_extincao(chosen.get_patch(0));
+		this->patch_pop[chosen->get_patch(0)] -= 1;
+		this->atualiza_extincao(chosen->get_patch(0));
 	}
 	if(acao == 1)
 	{
@@ -180,7 +180,7 @@ void paisagem::update(int acao, individuo chosen, int ind_chosen)
             this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
 	}
 	
-	this->tempo_do_mundo = this->tempo_do_mundo+chosen.get_tempo();
+	this->tempo_do_mundo = this->tempo_do_mundo+chosen->get_tempo();
     }
 }
 	
@@ -201,7 +201,7 @@ int paisagem::sorteia_individuo()
 	return menor;
 }
 
-individuo paisagem::copy_individuos(int ind)
+individuo* paisagem::copy_individuos(int ind)
 {//Esta função faz uso do construtor individuo(individuo), utilizado para nascimentos. Se o construtor for alterado para gerar novos individuos com características "infantis", esta função deverá ser alterada.
 	individuo chosen(*this->popIndividuos[ind]);
 	return chosen;
