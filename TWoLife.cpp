@@ -42,7 +42,7 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 	GetRNGstate(); /* (mudar para doxygen):  este comando chama o engine de numeros aleatorios do R
 					Por causa dela nossa biblioteca nao eh standalone */
 	
-	paisagem floresta = new paisagem(raio[0], N[0], angulo_visada[0], passo[0], 
+	paisagem* floresta = new paisagem(raio[0], N[0], angulo_visada[0], passo[0], 
 									  move[0], taxa_basal[0], taxa_morte[0], incl_b[0], 
 									  incl_d[0], numb_cells[0], cell_size[0], land_shape[0],
 									  density_type[0], death_mat[0], inipos[0], bound_condition[0], 
@@ -58,7 +58,7 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 	while (floresta->tempo_do_mundo < tempo[0] && floresta->conta_individuos() > 0)
 	{
 		int ind_neo = floresta->sorteia_individuo();
-		individuo neo = copy_individuos(ind_neo);
+		individuo* neo = copy_individuos(ind_neo);
 		int acao = floresta->sorteia_acao(ind_neo);
 		floresta->realiza_acao(acao, ind_neo);
 		double t_ant = floresta->tempo_do_mundo;
@@ -69,7 +69,8 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 			{
 				outputSIM << (int)floresta->tempo_do_mundo << " " << floresta->get_individuos(i)->get_id() << " " << floresta->get_individuos(i)->get_x() << " " << floresta->get_individuos(i)->get_y() << endl;
 			}
-		}		
+		}
+		delete neo;
 	}
 	if(floresta->conta_individuos()==0){outputSIM << floresta->tempo_do_mundo << " " << "NA" << " " << "NA" << " " << "NA" << endl;}
 	outputSIM.close(); //end of output file
