@@ -64,7 +64,7 @@ private:
     void initialize_patch(individuo * const ind) const;//Vai informar o indivíduo recém criado em que fragmento ele está
     void atualiza_patch(individuo * const ind) const;//vai informar o individuo em que fragmento ele está
     void atualiza_migracao(individuo * const ind) const;
-    void atualiza_extincao(individuo * const ind) const;
+    void atualiza_extincao(int label) const;
     //int define_tempo();
 	void apply_boundary(individuo * const ind); //const; // metodo para aplicação da condicao de contorno
     		
