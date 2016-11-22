@@ -203,7 +203,7 @@ int paisagem::sorteia_individuo()
 
 individuo* paisagem::copy_individuos(int ind)
 {//Esta função faz uso do construtor individuo(individuo), utilizado para nascimentos. Se o construtor for alterado para gerar novos individuos com características "infantis", esta função deverá ser alterada.
-	individuo chosen(*this->popIndividuos[ind]);
+	individuo* chosen = new individuo(*this->popIndividuos[ind]);
 	return chosen;
 }
 
