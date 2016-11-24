@@ -135,7 +135,7 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 	}	
 }
 
-void paisagem::update(int acao, individuo* chosen, int ind_chosen)
+void paisagem::update(int acao,  int ind_chosen)
 {
     if(this->popIndividuos.size()>0)
     {    
@@ -150,8 +150,8 @@ void paisagem::update(int acao, individuo* chosen, int ind_chosen)
 	
 	if(acao == 0)
 	{
-		this->patch_pop[chosen->get_patch(0)] -= 1;
-		this->atualiza_extincao(chosen->get_patch(0));
+	  this->patch_pop[this->get_atestado1()] -= 1;
+		this->atualiza_extincao(this->get_atestado1());
 	}
 	if(acao == 1)
 	{
@@ -179,8 +179,8 @@ void paisagem::update(int acao, individuo* chosen, int ind_chosen)
 			double dsty=this->calcDensity(popIndividuos[i]);
             this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
 	}
-	
-	this->tempo_do_mundo = this->tempo_do_mundo+chosen->get_tempo();
+	this->tempo_do_mundo = this->tempo_do_mundo+this->get_atestado0();
+
     }
 }
 	
@@ -199,12 +199,6 @@ int paisagem::sorteia_individuo()
 		}
 	}
 	return menor;
-}
-
-individuo* paisagem::copy_individuos(int ind)
-{//Esta função faz uso do construtor individuo(individuo), utilizado para nascimentos. Se o construtor for alterado para gerar novos individuos com características "infantis", esta função deverá ser alterada.
-	individuo* chosen = new individuo(*this->popIndividuos[ind]);
-	return chosen;
 }
 
 void paisagem::realiza_acao(int acao, int lower) //TODO : criar matriz de distancias como atributo do mundo e atualiza-la apenas quanto ao individuos afetado nesta funcao)
