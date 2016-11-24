@@ -33,7 +33,8 @@ private:
 	int* patch_pop;
 	int* extincao;
 	const int initialPos;
-	
+  double atestado0;
+  int atestado1;
 	//metodos privados
 	void populating(
 					const double raio, 
@@ -48,7 +49,7 @@ private:
 					/** Taxa de nascimento de um individuo no habitat favoravel e sem vizinhos */
 					const double taxa_basal, 
 					/** Taxa de morte dos individuos */
-					const double taxa_morte,					
+					const double taxa_morte,		
 					/** Inclinação da denso-dependência na natalidade */
 					const double incl_b,
 					/** Inclinação da denso-dependência na mortalidade */
@@ -115,7 +116,7 @@ public:
 			); //construtor
 
 	/** Atualiza as variáveis de todos os indivíduos (ver individuo::set_vizinhos, individuo::set_habitat e individuo::update) e escolhe uma ação para ser executada. Executa a ação e atualiza o tempo do mundo de acordo \sa \ref Introdução */
-    void update(int acao, individuo* chosen, int ind_chosen);//atualizador
+    void update(int acao, int ind_chosen);//atualizador
     int sorteia_individuo();
     int sorteia_acao(const int lower){return this->popIndividuos[lower]->sorteia_acao();}
 	void realiza_acao(int acao, int lower);//vai pegar os tempos de cada individuo e informa qual foi o escolhido e manda ele fazer
@@ -123,11 +124,15 @@ public:
     const int conta_individuos() const{return popIndividuos.size();}
 	/** Retorna um vetor contendo todos os indivíduos na paisagem */
     individuo* get_individuos(int i) const {return popIndividuos[i];}
-	individuo* copy_individuos(int ind);
 	/** Retorna o número de espécies existentes na paisagem \ref TBI */
     const int conta_especies() const;
 	/** Retorna o tamanho da paisagem (definido no construtor) */
     const double get_tamanho() const {return this->tamanho;}
+  const double get_atestado0(){return atestado0};
+  const int get_atestado1(){return atestado1};
+  
+  void set_atestado0(double a){this->atestado0=a};
+  void set_atestado1(int b){return atestado1=b};
 	
 	double calcDist(const individuo* a1, const individuo* a2) const;
 	
