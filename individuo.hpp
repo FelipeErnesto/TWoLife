@@ -92,7 +92,7 @@ public:
 	/** Atualiza o tipo de hábitat no qual o indivíduo está. Deve ser chamada a cada passo de tempo pela \ref paisagem. */
     void set_habitat (const int tipo){this->tipo_habitat=tipo;}
     /** Inicializa o fragmente do indivíduo*/
-    void initialize_patch(const int label){this->patch_label[0]=label;this->patch_label[1]=-1;this->patch_label[2]=-1;};
+    void initialize_patch(const int label){this->patch_label[0]=label;this->patch_label[1]=-1;this->patch_label[2]=-1;}
     /** Atualiza o fragmento do indivíduo */
     void set_patch (const int label){this->patch_label[2]=this->patch_label[1];this->patch_label[1]=this->patch_label[0];this->patch_label[0]=label;}
 	/** Atualiza a posi√ß√£o X do invid√≠duo */
