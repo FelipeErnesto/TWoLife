@@ -198,6 +198,8 @@ int paisagem::sorteia_individuo()
 			menor_tempo = this->popIndividuos[i]->get_tempo();
 		}
 	}
+	this->set_atestado0(menor_tempo);
+	this->set_atestado1(this->popIndividuos[menor]->get_patch(0));
 	return menor;
 }
 
