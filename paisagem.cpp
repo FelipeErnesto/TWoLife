@@ -33,6 +33,12 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 	this->migracao = new int[this->numb_patches+1];
 	this->patch_pop = new int[this->numb_patches+1];
 	this->extincao = new int[this->numb_patches+1];
+	for (unsigned int j = 1; j<numb_patches+1; j++)
+	{
+		this->migracao[j] = 0;
+		this->patch_pop[j] = 0;
+		this->extincao[j] = 0;
+	}
 	
 	// Calculo do raio dependendo do tipo de densidade. 0 = global, 1 = local (raio), 2 = kernel.
 	if(density_type==0)
