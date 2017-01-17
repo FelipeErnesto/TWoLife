@@ -148,7 +148,7 @@ TWoLife <- function (
  }
  TWoPlot(teste, land)
 plot(teste, xlim=c(-100,100), ylim=c(-100,100))
-print(dim(teste1))
+print(dim(teste))
 ## Tamanho de populacao apos t=6 de 100 repeticoes
 #pop.size<- numeric()
 #for (i in 1:20) 
