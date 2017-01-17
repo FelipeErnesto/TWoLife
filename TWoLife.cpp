@@ -73,6 +73,21 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 	if(floresta->conta_individuos()==0){outputSIM << floresta->tempo_do_mundo << " " << "NA" << " " << "NA" << " " << "NA" << endl;}
 	outputSIM.close(); //end of output file
 	
+	ofstream arqm;
+	ofstream arqe;
+	arqm.open ("migracao600.txt");
+	arqe.open ("extincao600.txt");
+
+	int numb_patches = floresta->get_numb_patches();
+	arqm << numb_patches<<endl;
+	arqe << numb_patches<<endl;
+	for (int j = 1; j<numb_patches+1; j++)
+	{
+		arqm << floresta->get_migracao(j)<<",";
+		arqe << floresta->get_extincao(j)<<",";
+	}
+	arqm.close();
+	arqe.close();
 	
 	*nPop = floresta->conta_individuos();
 	for (int i =0; i < *nPop; i ++) {
