@@ -75,8 +75,8 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 	
 	ofstream arqm;
 	ofstream arqe;
-	arqm.open ("migracao600.txt");
-	arqe.open ("extincao600.txt");
+	arqm.open ("migracao.txt");
+	arqe.open ("extincao.txt");
 
 	int numb_patches = floresta->get_numb_patches();
 	arqm << numb_patches<<endl;
