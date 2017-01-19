@@ -33,7 +33,7 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 	this->migracao = new int[this->numb_patches+1];
 	this->patch_pop = new int[this->numb_patches+1];
 	this->extincao = new int[this->numb_patches+1];
-	for (unsigned int j = 1; j<numb_patches+1; j++)
+	for (unsigned int j = 0; j<numb_patches+1; j++)
 	{
 		this->migracao[j] = 0;
 		this->patch_pop[j] = 0;
