@@ -156,37 +156,38 @@ void paisagem::update(int acao,  int ind_chosen)
 	
 	if(acao == 0)
 	{
-	  this->patch_pop[this->get_atestado1()] -= 1;
+		this->patch_pop[this->get_atestado1()] -= 1;
 		this->atualiza_extincao(this->get_atestado1());
 	}
 	if(acao == 1)
 	{
-		this->atualiza_habitat(this->popIndividuos[ind_chosen]);//retorna o tipo de habitat
-        	this->initialize_patch(this->popIndividuos[ind_chosen]);//atualiza o fragmento atual
-		this->patch_pop[this->popIndividuos[ind_chosen]->get_patch(0)] += 1;
+		this->atualiza_habitat(this->popIndividuos[this->popIndividuos.size()-1]);//retorna o tipo de habitat
+		this->initialize_patch(this->popIndividuos[this->popIndividuos.size()-1]);//atualiza o fragmento atual
+		this->patch_pop[this->popIndividuos[this->popIndividuos.size()-1]->get_patch(0)] += 1;
 	}
 	if(acao == 2)
 	{
 		this->atualiza_habitat(this->popIndividuos[ind_chosen]);//retorna o tipo de habitat
 		int last_patch = this->popIndividuos[ind_chosen]->get_patch(0);
-        	this->atualiza_patch(this->popIndividuos[ind_chosen]);//atualiza o fragmento atual
-		if(last_patch != this->popIndividuos[ind_chosen]->get_patch(0))
+		this->atualiza_patch(this->popIndividuos[ind_chosen]);//atualiza o fragmento atual
+		if(this->popIndividuos[ind_chosen]->get_patch(0) != last_patch && this->popIndividuos[ind_chosen]->get_patch(1)!=-1)
 		{
-        		this->atualiza_migracao(this->popIndividuos[ind_chosen]);
-			this->patch_pop[last_patch] -= 1;
+			this->patch_pop[this->popIndividuos[ind_chosen]->get_patch(1)] -= 1;
+			this->atualiza_extincao(this->popIndividuos[ind_chosen]->get_patch(1));
 			this->patch_pop[this->popIndividuos[ind_chosen]->get_patch(0)] += 1;
-        		this->atualiza_extincao(last_patch);
+
+			if(this->popIndividuos[ind_chosen]->get_patch(0)!=0 && this->popIndividuos[ind_chosen]->get_patch(1)!=0 || this->popIndividuos[ind_chosen]->get_patch(1)==0 && this->popIndividuos[ind_chosen]->get_patch(0) != this->popIndividuos[ind_chosen]->get_patch(2) && this->popIndividuos[ind_chosen]->get_patch(2)>0)
+				this->atualiza_migracao(this->popIndividuos[ind_chosen]);
 		}
 	}
-		// Este loop não é parelelizado, APESAR de ser independente, para garantir que as funcoes
-		// aleatorias sao chamadas sempre na mesma ordem (garante reprodutibilidade)
+	// Este loop não é parelelizado, APESAR de ser independente, para garantir que as funcoes
+	// aleatorias sao chamadas sempre na mesma ordem (garante reprodutibilidade)
         for(unsigned int i=0; i<this->popIndividuos.size(); i++)
         {
-			double dsty=this->calcDensity(popIndividuos[i]);
-            this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
+		double dsty=this->calcDensity(popIndividuos[i]);
+		this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
 	}
 	this->tempo_do_mundo = this->tempo_do_mundo+this->get_atestado0();
-
     }
 }
 	
@@ -516,8 +517,7 @@ void paisagem::initialize_patch(individuo * const ind) const
 	int hx,hy;
 	hx= (double)ind->get_x()/this->cell_size+this->numb_cells/2;
 	hy= ((double)ind->get_y()/this->cell_size)*(-1)+this->numb_cells/2;
-	if(this->patches[hx][hy] != ind->get_patch(0))
-		ind->initialize_patch(this->patches[hx][hy]);
+	ind->initialize_patch(this->patches[hx][hy]);
 }
 
 void paisagem::atualiza_migracao(individuo * const ind) const
