@@ -32,6 +32,7 @@ private:
 	int* migracao;
 	int* patch_pop;
 	int* extincao;
+	int* patch_area;
 	const int initialPos;
   double atestado0;
   int atestado1;
