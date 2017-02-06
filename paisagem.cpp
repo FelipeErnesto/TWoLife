@@ -564,12 +564,12 @@ void paisagem::find_patches(int x, int y, int current_label)
 
 void paisagem::initialize_dmatrix()
 {
-	forward_list<forward_list<int> >::iterator it_dmatrix;
+	forward_list<forward_list<double> >::iterator it_dmatrix;
 	it_dmatrix = dmatrix.before_begin();
 	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
 	{
-		forward_list<int> row;
-		forward_list<int>::iterator it;
+		forward_list<double> row;
+		forward_list<double>::iterator it;
 		it = row.before_begin();
 		for(unsigned int j=0; j<this->popIndividuos.size(); j++)
 			it = row.insert_after(it, this->calcdist(this->popIndividuos[i], this->popIndividuos[j]));
