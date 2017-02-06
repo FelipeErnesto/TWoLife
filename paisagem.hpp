@@ -36,8 +36,9 @@ private:
 	int* extincao;
 	int* patch_area;
 	const int initialPos;
-  double atestado0;
-  int atestado1;
+	double atestado0;
+	int atestado1;
+	vector<individuo*> atestado2;
 	//metodos privados
 	void populating(
 					const double raio, 
@@ -151,6 +152,7 @@ public:
     int get_migracao(int i){return migracao[i];}
     int get_extincao(int i){return extincao[i];}
     int get_numb_patches(){return numb_patches;}
+    double get_dist(int ind1, int ind2);
 };
 
 #endif // PAISAGEM_H
