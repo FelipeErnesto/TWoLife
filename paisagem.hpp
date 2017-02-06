@@ -5,6 +5,7 @@
 #include<algorithm>
 #include<cstdlib>
 #include<cmath>
+#include <forward_list>
 ///** Dimensão maxima do mapa, usada para rotinas de fragmentação TBI */
 #define dim 10000 /*Em algum momento pode ser alterado para um argumento do
 		    construtor. No momento não é prioritário. */
@@ -28,6 +29,7 @@ private:
 	const int boundary_condition; // tipo de condição de contorno (0 = absortiva, 1 = periódica, 2 = reflexiva)
 	int landscape[dim][dim];//[linha][coluna] temporariamente substituido or valor fixo
 	int patches[dim][dim]; //Matriz com a determinação do fragmento a que cada pixel pertence. 0 para matriz; i>=1 para fragmentos
+	forward_list<forward_list<int> > dmatrix;//matriz de distancias
 	int numb_patches; //Número de fragmentos encontrados. Desconsidera-se a matriz.
 	int* migracao;
 	int* patch_pop;
@@ -67,6 +69,7 @@ private:
     void atualiza_patch(individuo * const ind) const;//vai informar o individuo em que fragmento ele está
     void atualiza_migracao(individuo * const ind) const;
     void atualiza_extincao(int label) const;
+    void initialize_dmatrix() const;
     //int define_tempo();
 	void apply_boundary(individuo * const ind); //const; // metodo para aplicação da condicao de contorno
     		
