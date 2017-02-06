@@ -55,7 +55,8 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 	}
 	/* Coloca os indivíduos na paisagem por meio da função populating() */	
 	this->populating(raio,N,angulo_visada,passo,move,taxa_basal,taxa_morte,incl_b,incl_d,death_mat,density_type);
-
+	
+	this->initialize_dmatrix();
 	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
 	{
 		this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
@@ -560,5 +561,22 @@ void paisagem::find_patches(int x, int y, int current_label)
   find_patches(x - 1, y, current_label);
   find_patches(x, y - 1, current_label);
 }
+
+void paisagem::initialize_dmatrix()
+{
+	forward_list<forward_list<int> >::iterator it_dmatrix;
+	it_dmatrix = dmatrix.before_begin();
+	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
+	{
+		forward_list<int> row;
+		forward_list<int>::iterator it;
+		it = row.before_begin();
+		for(unsigned int j=0; j<this->popIndividuos.size(); j++)
+			it = row.insert_after(it, this->calcdist(this->popIndividuos[i], this->popIndividuos[j]));
+		it_dmatrix = insert_after(it_dmatrix, row);
+	}
+}
+
+	
 
 
