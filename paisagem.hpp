@@ -29,7 +29,7 @@ private:
 	const int boundary_condition; // tipo de condição de contorno (0 = absortiva, 1 = periódica, 2 = reflexiva)
 	int landscape[dim][dim];//[linha][coluna] temporariamente substituido or valor fixo
 	int patches[dim][dim]; //Matriz com a determinação do fragmento a que cada pixel pertence. 0 para matriz; i>=1 para fragmentos
-	forward_list<forward_list<int> > dmatrix;//matriz de distancias
+	forward_list<forward_list<double> > dmatrix;//matriz de distancias
 	int numb_patches; //Número de fragmentos encontrados. Desconsidera-se a matriz.
 	int* migracao;
 	int* patch_pop;
