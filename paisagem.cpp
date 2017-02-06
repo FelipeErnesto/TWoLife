@@ -59,7 +59,7 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 	this->initialize_dmatrix();
 	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
 	{
-		this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
+		this->atualiza_vizinhos(i);//atualiza os vizinhos
 		this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
 		this->initialize_patch(this->popIndividuos[i]);//inicia o indice do fragmento fragmento
 		this->patch_pop[this->popIndividuos[i]->get_patch(0)] += 1;
@@ -159,8 +159,8 @@ void paisagem::update(int acao,  int ind_chosen)
 	#pragma omp parallel for
 	#endif
         for(unsigned int i=0; i<this->popIndividuos.size(); i++)
-        {//Falta colocar esta função nos if aqui embaixo, usando matriz de distâncias
-            this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
+        {//Falta colocar esta função nos if aqui embaixo, usando matriz de distâncias, e atualizar a dmatrix pra cada caso
+            this->atualiza_vizinhos(i);//atualiza os vizinhos
         }
 	
 	if(acao == 0)
@@ -469,30 +469,30 @@ double paisagem::calcDensity(const individuo* ind1) const
   deve alterá-los. Previne vários erros e pode otimizar compilação
 */
 
-void paisagem::atualiza_vizinhos(individuo * const ag1) const //acessando os vizinhos dos agentes
+void paisagem::atualiza_vizinhos(int ind) const //acessando os vizinhos dos agentes
 {  
 	vector <individuo*> listViz;
-	if(ag1->get_densType()==0) //dens_type poderia voltar como propriedade da paisagem. Facilitariam as coisas. Como muitas propriedades e métodos deste código, elas podem ser interpretadas das duas formas (como do individuo ou como da paisagem). O que está dando confusão é que estamos fazendo um IBM, mas para algumas situações estamos querendo simular dinâmicas cujas variáveis de interesse são propriedades populacionais e não do indivíduo. Se aceito, limar o método get_densType() do individuo.h.
+	if(this->popIndividuos[ind]->get_densType()==0) //dens_type poderia voltar como propriedade da paisagem. Facilitariam as coisas. Como muitas propriedades e métodos deste código, elas podem ser interpretadas das duas formas (como do individuo ou como da paisagem). O que está dando confusão é que estamos fazendo um IBM, mas para algumas situações estamos querendo simular dinâmicas cujas variáveis de interesse são propriedades populacionais e não do indivíduo. Se aceito, limar o método get_densType() do individuo.h.
 	{		
 		for(unsigned int j=0; j<popIndividuos.size(); j++)
 		{
 			individuo* ag2=this->popIndividuos[j];
-			if(ag1==ag2) continue;			   
+			if(i==j) continue;			   
 			listViz.push_back(ag2);
 		}
 	}
 	else
 	{
-		double rad = (double)ag1->get_raio();
+		double rad = (double)this->popIndividuos[i]->get_raio();
 		for(unsigned int j=0; j<popIndividuos.size(); j++)
 		{
 			individuo* ag2=this->popIndividuos[j];
-			if(ag1==ag2) continue;   
-			double d=this->calcDist(ag1,ag2);
+			if(i==j) continue;   
+			double d=this->get_dist(i,j);
 			if(d<=rad) {listViz.push_back(ag2);}		
 		}
 	}
-	ag1->set_vizinhos(listViz);
+	this->popIndividuos[i]->set_vizinhos(listViz);
 		
 }
 
@@ -577,6 +577,20 @@ void paisagem::initialize_dmatrix()
 	}
 }
 
-	
+
+double get_dist(int ind1, int ind2)
+{
+	forward_list<forward_list<double> >::iterator it_dmatrix;
+	it_dmatrix = dmatrix.begin();
+	advance(it_matrix, ind1);
+	forward_list<double> row = *it_dmatrix;
+	forward_list<double>::iterator it;
+	it = row.begin();
+	advance(it, ind2);
+	return *it;
+}
+
+
+
 
 
