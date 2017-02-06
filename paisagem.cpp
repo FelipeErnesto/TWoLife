@@ -543,7 +543,7 @@ void paisagem::atualiza_migracao(individuo * const ind) const
 void paisagem::atualiza_extincao(int label) const
 {
 	if(patch_pop[label] == 0)
-		extincao[label]+=1;
+		this->extincao[label]+=1;
 }
 
 void paisagem::find_patches(int x, int y, int current_label)
@@ -572,8 +572,8 @@ void paisagem::initialize_dmatrix()
 		forward_list<double>::iterator it;
 		it = row.before_begin();
 		for(unsigned int j=0; j<this->popIndividuos.size(); j++)
-			it = row.insert_after(it, this->calcdist(this->popIndividuos[i], this->popIndividuos[j]));
-		it_dmatrix = insert_after(it_dmatrix, row);
+			it = row.insert_after(it, this->calcDist(this->popIndividuos[i], this->popIndividuos[j]));
+		it_dmatrix = dmatrix.insert_after(it_dmatrix, row);
 	}
 }
 
