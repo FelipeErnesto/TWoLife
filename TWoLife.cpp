@@ -63,7 +63,7 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 		individuo::subtract_id();
 		floresta->realiza_acao(acao, ind_neo);
 		double t_ant = floresta->tempo_do_mundo;
-		floresta->update(acao, ind_neo);
+		floresta->update(acao, ind_neo, atestado);
 		if(t_ant < (int)floresta->tempo_do_mundo)
 		{
 			for(unsigned int i=0; i<floresta->conta_individuos();i++)
