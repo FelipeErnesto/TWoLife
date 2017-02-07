@@ -61,7 +61,7 @@ private:
 					const int dens_type
 					);
 					
-    void atualiza_vizinhos(int ind) const;//contabilizador de vizinhos
+    void atualiza_vizinhos(int i) const;//contabilizador de vizinhos
     void atualiza_habitat(individuo * const ind) const;//vai informar o individuo em que tipo de habitat ele esta
     void initialize_patch(individuo * const ind) const;//Vai informar o indivíduo recém criado em que fragmento ele está
     void atualiza_patch(individuo * const ind) const;//vai informar o individuo em que fragmento ele está
