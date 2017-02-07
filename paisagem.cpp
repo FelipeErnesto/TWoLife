@@ -467,10 +467,10 @@ double paisagem::calcDensity(const individuo* ind1) const
   deve alterá-los. Previne vários erros e pode otimizar compilação
 */
 
-void paisagem::atualiza_vizinhos(int ind) const //acessando os vizinhos dos agentes
+void paisagem::atualiza_vizinhos(int i) const //acessando os vizinhos dos agentes
 {  
 	vector <individuo*> listViz;
-	if(this->popIndividuos[ind]->get_densType()==0) //dens_type poderia voltar como propriedade da paisagem. Facilitariam as coisas. Como muitas propriedades e métodos deste código, elas podem ser interpretadas das duas formas (como do individuo ou como da paisagem). O que está dando confusão é que estamos fazendo um IBM, mas para algumas situações estamos querendo simular dinâmicas cujas variáveis de interesse são propriedades populacionais e não do indivíduo. Se aceito, limar o método get_densType() do individuo.h.
+	if(this->popIndividuos[i]->get_densType()==0) //dens_type poderia voltar como propriedade da paisagem. Facilitariam as coisas. Como muitas propriedades e métodos deste código, elas podem ser interpretadas das duas formas (como do individuo ou como da paisagem). O que está dando confusão é que estamos fazendo um IBM, mas para algumas situações estamos querendo simular dinâmicas cujas variáveis de interesse são propriedades populacionais e não do indivíduo. Se aceito, limar o método get_densType() do individuo.h.
 	{		
 		for(unsigned int j=0; j<popIndividuos.size(); j++)
 		{
@@ -481,7 +481,7 @@ void paisagem::atualiza_vizinhos(int ind) const //acessando os vizinhos dos agen
 	}
 	else
 	{
-		double rad = (double)this->popIndividuos[ind]->get_raio();
+		double rad = (double)this->popIndividuos[i]->get_raio();
 		for(unsigned int j=0; j<popIndividuos.size(); j++)
 		{
 			individuo* ag2=this->popIndividuos[j];
