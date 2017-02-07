@@ -154,6 +154,7 @@ void paisagem::update(int acao,  int ind_chosen, individuo* atestado)
 {
     if(this->popIndividuos.size()>0)
     {    
+	this->atualiza_dmatrix(acao, ind_chosen);
 	// Este for loop pode ser paralelizado, pois o que acontece com cada individuo eh independente
 	#ifdef PARALLEL
 	#pragma omp parallel for
@@ -586,6 +587,72 @@ double paisagem::get_dist(int ind1, int ind2)
 	it = row.begin();
 	advance(it, ind2);
 	return *it;
+}
+
+void paisagem::atualiza_dmatrix(acao, ind_chosen)
+{
+	forward_list<forward_list<double> >::iterator it_dmatrix;
+	it_dmatrix = this->dmatrix.before_begin();
+	switch(acao)
+	{
+		case 0:
+			advance(it_dmatrix, ind_chosen);
+			this->dmatrix.erase_after(it_dmatrix);
+			for(it_dmatrix = this->dmatrix.begin();it_dmatrix!=this->dmatrix.end();it_dmatrix++)
+			{
+				forward_list<double> row = *it_dmatrix;
+				forward_list<double>::iterator it;
+				it = row.before_begin();
+				advance(it, ind_chosen);
+				row.erase_after(it);
+				*it_dmatrix = row;
+			}
+			break;
+		case 1:
+			advance(it_dmatrix, this->popIndividuos.size()-1);
+			forward_list<double> new_row;
+			forward_list<double>::iterator it_new;
+			it_new = new_row.before_begin();
+			int j = 0;
+			for(it_dmatrix = this->dmatrix.begin();it_dmatrix!=this->dmatrix.end();it_dmatrix++)
+			{
+				forward_list<double> row = *it_dmatrix;
+				forward_list<double>::iterator it;
+				it = row.before_begin();
+				advance(it, this->popIndividuos.size()-1);
+				double d = this->calcDist(this->popIndividuos[this->popIndividuos.size()-1],popIndividuos[j]);
+				it = row.insert_after(it, d);
+				*it_dmatrix = row;
+				it_new = new_row.insert_after(it_new, d);
+				j++;
+			}
+			it_new = new_row.insert_after(it_new, 0);
+			advance(it_dmatrix, this->popIndividuos.size()-1);
+			this->dmatrix.insert_after(it_dmatrix, new_row);
+			break;
+		case 2:
+			advance(it_dmatrix, ind_chosen);
+			forward_list<double> new_row;
+			forward_list<double>::iterator it_new;
+			it_new = new_row.before_begin();
+			int j = 0;
+			for(it_dmatrix = this->dmatrix.begin();it_dmatrix!=this->dmatrix.end();it_dmatrix++)
+			{
+				forward_list<double> row = *it_dmatrix;
+				forward_list<double>::iterator it;
+				it = row.before_begin();
+				advance(it, ind_chosen);
+				double d = this->calcDist(this->popIndividuos[ind_chosen],popIndividuos[j]);
+				row.erase_after(it);
+				it = row.insert_after(it, d);
+				*it_dmatrix = row;
+				it_new = new_row.insert_after(it_new, d);
+				j++;
+			}
+			advance(it_dmatrix, this->popIndividuos.size()-1);
+			this->dmatrix.insert_after(it_dmatrix, new_row);
+			break;
+	}
 }
 
 
