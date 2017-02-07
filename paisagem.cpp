@@ -580,7 +580,7 @@ double get_dist(int ind1, int ind2)
 {
 	forward_list<forward_list<double> >::iterator it_dmatrix;
 	it_dmatrix = dmatrix.begin();
-	advance(it_matrix, ind1);
+	advance(it_dmatrix, ind1);
 	forward_list<double> row = *it_dmatrix;
 	forward_list<double>::iterator it;
 	it = row.begin();
