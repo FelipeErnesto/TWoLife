@@ -150,7 +150,7 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 	}	
 }
 
-void paisagem::update(int acao,  int ind_chosen)
+void paisagem::update(int acao,  int ind_chosen, individuo* atestado)
 {
     if(this->popIndividuos.size()>0)
     {    
@@ -165,8 +165,8 @@ void paisagem::update(int acao,  int ind_chosen)
 	
 	if(acao == 0)
 	{
-		this->patch_pop[this->get_atestado1()] -= 1;
-		this->atualiza_extincao(this->get_atestado1());
+		this->patch_pop[atestado->get_patch(0)] -= 1;
+		this->atualiza_extincao(atestado->get_patch(0));
 	}
 	if(acao == 1)
 	{
@@ -196,7 +196,7 @@ void paisagem::update(int acao,  int ind_chosen)
 		double dsty=this->calcDensity(popIndividuos[i]);
 		this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
 	}
-	this->tempo_do_mundo = this->tempo_do_mundo+this->get_atestado0();
+	this->tempo_do_mundo = this->tempo_do_mundo+atestado->get_tempo();
     }
 }
 	
@@ -214,8 +214,6 @@ int paisagem::sorteia_individuo()
 			menor_tempo = this->popIndividuos[i]->get_tempo();
 		}
 	}
-	this->set_atestado0(menor_tempo);
-	this->set_atestado1(this->popIndividuos[menor]->get_patch(0));
 	return menor;
 }
 
