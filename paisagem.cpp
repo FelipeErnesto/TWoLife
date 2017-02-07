@@ -563,7 +563,7 @@ void paisagem::find_patches(int x, int y, int current_label)
 void paisagem::initialize_dmatrix()
 {
 	forward_list<forward_list<double> >::iterator it_dmatrix;
-	it_dmatrix = dmatrix.before_begin();
+	it_dmatrix = this->dmatrix.before_begin();
 	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
 	{
 		forward_list<double> row;
@@ -571,12 +571,12 @@ void paisagem::initialize_dmatrix()
 		it = row.before_begin();
 		for(unsigned int j=0; j<this->popIndividuos.size(); j++)
 			it = row.insert_after(it, this->calcDist(this->popIndividuos[i], this->popIndividuos[j]));
-		it_dmatrix = dmatrix.insert_after(it_dmatrix, row);
+		it_dmatrix = this->dmatrix.insert_after(it_dmatrix, row);
 	}
 }
 
 
-double get_dist(int ind1, int ind2)
+double paisagem::get_dist(int ind1, int ind2)
 {
 	forward_list<forward_list<double> >::iterator it_dmatrix;
 	it_dmatrix = this->dmatrix.begin();
