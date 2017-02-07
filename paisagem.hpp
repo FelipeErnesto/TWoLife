@@ -61,7 +61,7 @@ private:
 					const int dens_type
 					);
 					
-    void atualiza_vizinhos(int i) const;//contabilizador de vizinhos
+    void atualiza_vizinhos(int i);//contabilizador de vizinhos; Precisei tirar o const daqui da frente, mas devo dar um jeito de coloca-lo de volta
     void atualiza_habitat(individuo * const ind) const;//vai informar o individuo em que tipo de habitat ele esta
     void initialize_patch(individuo * const ind) const;//Vai informar o indivíduo recém criado em que fragmento ele está
     void atualiza_patch(individuo * const ind) const;//vai informar o individuo em que fragmento ele está
