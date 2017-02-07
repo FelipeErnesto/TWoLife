@@ -481,7 +481,7 @@ void paisagem::atualiza_vizinhos(int ind) const //acessando os vizinhos dos agen
 	}
 	else
 	{
-		double rad = (double)this->popIndividuos[i]->get_raio();
+		double rad = (double)this->popIndividuos[ind]->get_raio();
 		for(unsigned int j=0; j<popIndividuos.size(); j++)
 		{
 			individuo* ag2=this->popIndividuos[j];
