@@ -579,7 +579,7 @@ void paisagem::initialize_dmatrix()
 double get_dist(int ind1, int ind2)
 {
 	forward_list<forward_list<double> >::iterator it_dmatrix;
-	it_dmatrix = dmatrix.begin();
+	it_dmatrix = this->dmatrix.begin();
 	advance(it_dmatrix, ind1);
 	forward_list<double> row = *it_dmatrix;
 	forward_list<double>::iterator it;
