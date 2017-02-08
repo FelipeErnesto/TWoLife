@@ -121,7 +121,7 @@ public:
 			); //construtor
 
 	/** Atualiza as variáveis de todos os indivíduos (ver individuo::set_vizinhos, individuo::set_habitat e individuo::update) e escolhe uma ação para ser executada. Executa a ação e atualiza o tempo do mundo de acordo \sa \ref Introdução */
-    void update(int acao, int ind_chosen, individuo* atestado);//atualizador
+    void update(int acao, int ind_chosen);//atualizador
     int sorteia_individuo();
     int sorteia_acao(const int lower){return this->popIndividuos[lower]->sorteia_acao();}
 	void realiza_acao(int acao, int lower);//vai pegar os tempos de cada individuo e informa qual foi o escolhido e manda ele fazer
