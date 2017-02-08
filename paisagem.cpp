@@ -589,9 +589,12 @@ double paisagem::get_dist(int ind1, int ind2)
 	return *it;
 }
 
-void paisagem::atualiza_dmatrix(acao, ind_chosen)
+void paisagem::atualiza_dmatrix(int acao,int ind_chosen)
 {
 	forward_list<forward_list<double> >::iterator it_dmatrix;
+	forward_list<double> new_row;
+	forward_list<double>::iterator it_new;
+	int j = 0;
 	switch(acao)
 	{
 		case 0:
@@ -609,10 +612,7 @@ void paisagem::atualiza_dmatrix(acao, ind_chosen)
 			}
 			break;
 		case 1:
-			forward_list<double> new_row;
-			forward_list<double>::iterator it_new;
 			it_new = new_row.before_begin();
-			int j = 0;
 			for(it_dmatrix = this->dmatrix.begin();it_dmatrix!=this->dmatrix.end();it_dmatrix++)
 			{
 				forward_list<double> row = *it_dmatrix;
@@ -632,10 +632,7 @@ void paisagem::atualiza_dmatrix(acao, ind_chosen)
 			break;
 		case 2:
 			advance(it_dmatrix, ind_chosen);
-			forward_list<double> new_row;
-			forward_list<double>::iterator it_new;
 			it_new = new_row.before_begin();
-			int j = 0;
 			for(it_dmatrix = this->dmatrix.begin();it_dmatrix!=this->dmatrix.end();it_dmatrix++)
 			{
 				forward_list<double> row = *it_dmatrix;
