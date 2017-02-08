@@ -85,7 +85,6 @@ public:
 
     /** Reinicia o contador de indivíduos **/
     static void reset_id() {MAXID = 0;}
-    static void subtract_id() {MAXID -= 1;}
 	/** Retorna o identificador único deste indivíduo */
 	const unsigned long get_id() const {return this->id;}
 	/** Atualiza a lista de vizinhos deste indivíduo. Deve ser chamada a cada passo de tempo pela \ref paisagem */
