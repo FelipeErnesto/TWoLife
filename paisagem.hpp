@@ -36,6 +36,8 @@ private:
 	int* extincao;
 	int* patch_area;
 	const int initialPos;
+	double atestado0;
+  	int atestado1;
 	//metodos privados
 	void populating(
 					const double raio, 
@@ -131,6 +133,11 @@ public:
     const int conta_especies() const;
 	/** Retorna o tamanho da paisagem (definido no construtor) */
     const double get_tamanho() const {return this->tamanho;}
+	const double get_atestado0(){return atestado0;}
+  const int get_atestado1(){return atestado1;}
+	
+	void set_atestado0(double a){this->atestado0=a;}
+  void set_atestado1(int b){atestado1=b;}
 	
 	double calcDist(const individuo* a1, const individuo* a2) const;
 	
