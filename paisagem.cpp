@@ -592,10 +592,10 @@ double paisagem::get_dist(int ind1, int ind2)
 void paisagem::atualiza_dmatrix(acao, ind_chosen)
 {
 	forward_list<forward_list<double> >::iterator it_dmatrix;
-	it_dmatrix = this->dmatrix.before_begin();
 	switch(acao)
 	{
 		case 0:
+			it_dmatrix = this->dmatrix.before_begin();
 			advance(it_dmatrix, ind_chosen);
 			this->dmatrix.erase_after(it_dmatrix);
 			for(it_dmatrix = this->dmatrix.begin();it_dmatrix!=this->dmatrix.end();it_dmatrix++)
@@ -609,7 +609,6 @@ void paisagem::atualiza_dmatrix(acao, ind_chosen)
 			}
 			break;
 		case 1:
-			advance(it_dmatrix, this->popIndividuos.size()-1);
 			forward_list<double> new_row;
 			forward_list<double>::iterator it_new;
 			it_new = new_row.before_begin();
@@ -627,6 +626,7 @@ void paisagem::atualiza_dmatrix(acao, ind_chosen)
 				j++;
 			}
 			it_new = new_row.insert_after(it_new, 0);
+			it_dmatrix = this->dmatrix.before_begin();
 			advance(it_dmatrix, this->popIndividuos.size()-1);
 			this->dmatrix.insert_after(it_dmatrix, new_row);
 			break;
@@ -649,7 +649,9 @@ void paisagem::atualiza_dmatrix(acao, ind_chosen)
 				it_new = new_row.insert_after(it_new, d);
 				j++;
 			}
-			advance(it_dmatrix, this->popIndividuos.size()-1);
+			it_dmatrix = this->dmatrix.before_begin();
+			advance(it_dmatrix, ind_chosen);
+			dmatrix.erase_after(it_dmatrix);
 			this->dmatrix.insert_after(it_dmatrix, new_row);
 			break;
 	}
