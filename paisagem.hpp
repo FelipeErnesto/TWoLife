@@ -67,6 +67,7 @@ private:
     void atualiza_patch(individuo * const ind) const;//vai informar o individuo em que fragmento ele está
     void atualiza_migracao(individuo * const ind) const;
     void atualiza_extincao(int label) const;
+    void atualiza_dmatrix(int acao, int ind_chosen);
     void initialize_dmatrix(); //Por algum motivo no consigo colocar const aqui :/
     //int define_tempo();
 	void apply_boundary(individuo * const ind); //const; // metodo para aplicação da condicao de contorno
