@@ -27,17 +27,11 @@ using namespace std;
 extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double * passo, double * move,
 						 double * taxa_basal, double * taxa_morte, double * incl_b, double * incl_d,
 						 int * numb_cells, double * cell_size, int * land_shape, int * density_type, 
-						 double * death_mat, int * inipos, int * bound_condition, int * scape, double * tempo, int * nPop, double * x, double * y, int * outCode)
+						 double * death_mat, int * inipos, int * bound_condition, int * scape, double * tempo, int * nPop, double * x, double * y, char ** outCode)
 {
-	// This sequence creates an attribute containing the output file name. The template is output-00000.txt.
-	string fileNAME = "output-00000.txt";
 	stringstream tmps;
 	tmps<<outCode[0];
-	string addToName = tmps.str();
-	int fnSize = fileNAME.size();
-    int tmpsSize = addToName.size();
-	fileNAME.erase(fileNAME.begin()+fnSize-4-tmpsSize,fileNAME.begin()+fnSize-4);
-	fileNAME.insert(fnSize-4-tmpsSize,addToName);
+	string fileNAME = tmps.str();
 	
 	GetRNGstate(); /* (mudar para doxygen):  este comando chama o engine de numeros aleatorios do R
 					Por causa dela nossa biblioteca nao eh standalone */
