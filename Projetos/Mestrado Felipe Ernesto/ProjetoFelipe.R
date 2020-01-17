@@ -12,7 +12,7 @@ dyn.load("../../TWoLife.so") ## carrega os source resultantes como biblioteca di
 # numb.cells represents both the lenght AND width of the landscape, so numb.cells=100 creates a 100x100 landscape
 # Land.shape can be 0 = XXX or 1 = XXX.
 # Bound.condition can be 0 = XXX or 1 = XXX.
-readLandscape <- function (h, f, k, np)
+readLandscape <- function (h, f, r, np)
 {
 	land <- rep(-1, np*np)
 	nome <- paste("../Paisagens/", f, "_", h, "_", r, ".txt", sep="")
@@ -148,7 +148,7 @@ for(i in HabProp)
 				land <- list(numb.cells = 64, cell.size = 0.03, bound.condition = 1, land.shape = 1, scape = scape )
 				class(land) <- "landscape"
 				#o.c <- i*100 + j*10 + k #Identificador do output
-				o.c <- paste("output-",h,"_",f, "_", k, ".txt", sep="")
+				o.c <- paste("output-",h,"_",f, "_", k,"_", l, ".txt", sep="")
 				#Lembrar de ajustar o tempo pra chegar no equilibrio
 				TWoLife(raio=R, N=300, AngVis=angvis, passo=s, move=delta, taxa.basal=lamb0, taxa.morte=mu0, incl.birth=b, incl.death=d, density.type=1, death.mat=dm, landscape = land, tempo=50, ini.config=1, out.code=o.c)
 			}
