@@ -148,14 +148,9 @@ int individuo::sorteia_acao()
 	return probscum.size()-1;
 }
 
-void individuo::anda(bool aleatorio)
+void individuo::anda()
 {
-    //a cada movimentacao ele muda de direcao; random walk dentro de um angulo de visao
-	if (aleatorio) {
-		this->orientacao = runif(-180.0,180.0);//random way point para sortear uma direcao qualquer
-	} else {
 		this->orientacao+= runif(-ang_visada/2.0, ang_visada/2.0);//random way point
-	}
     double oriRad=this->orientacao*M_PI/180.0;//tranforma em radianos para poder calcular as distancias das posicoes x e y
     double dx= cos(oriRad)*this->passo;
     double dy= sin(oriRad)*this->passo;

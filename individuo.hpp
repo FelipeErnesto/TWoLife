@@ -150,7 +150,7 @@ public:
 	/** Faz com que o indivíduo ande um passo, de tamanho passo. A orientação na qual o indivíduo vai andar é a orientação atual
 	 * (definida no construtor como orientacao) mais um ângulo aleatório dentro do ângulo de visada (angulo_visada). A definição de um 
 	 * ângulo de visada de 360 graus equivale a uma caminhada aleatória */
-    void anda(/** Passe aleatorio = true para forçar uma caminhada aleatória */ bool aleatorio = true);
+    void anda();
 };
 //Falta mexer no doxygen dos construtores e da update
 
