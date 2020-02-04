@@ -149,7 +149,7 @@ for(i in HabProp)
 				f = format(j, nsmall=2)
 				r = formatC(k, width = 5, format = "d", flag = "0")
 				scape <- readLandscape(h, f, r, 64)
-				land <- list(numb.cells = 64, cell.size = 0.03, bound.condition = 1, land.shape = 1, scape = scape )
+				land <- list(numb.cells = 64, cell.size = 0.03, bound.condition = 0, land.shape = 1, scape = scape )
 				class(land) <- "landscape"
 				#o.c <- i*100 + j*10 + k #Identificador do output
 				o.c <- paste("output-",h,"_",f, "_", k,"_", l, ".txt", sep="")
