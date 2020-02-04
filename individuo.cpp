@@ -24,16 +24,16 @@ class individuo_exception: public exception
 
 individuo::individuo(double x, double y, int especie, double taxa_morte,
                      double orientacao, double angulo_visada,
-                     double passo, double move, double raio,
+                     double passo, double taxa_move, double raio,
                      double taxa_basal, int semente, //retirar int semente 
 					 double incl_b, double incl_d,
-					 double death_mat, int dens_type):
+					 double death_mat, double move_mat, int dens_type):
 	id(++MAXID), // pega o próximo ID livre
 	x(x),
 	y(y),
 	especie(especie),
 	taxa_morte(taxa_morte),
-	move(move),
+	taxa_move(taxa_move),
 	passo(passo),
 	orientacao(orientacao),
 	ang_visada(angulo_visada),
@@ -43,11 +43,12 @@ individuo::individuo(double x, double y, int especie, double taxa_morte,
 	incl_birth(incl_b),
 	incl_death(incl_d),
 	const_d_matrix(death_mat),
+	const_m_matrix(move_mat),
 	dens_type(dens_type)
 {
 	if (taxa_morte < 0) throw myex;
 	if (passo < 0) throw myex;
-	if (move < 0) throw myex;
+	if (taxa_move < 0) throw myex;
 	if (raio < 0) throw myex;
 	if (taxa_basal < 0) throw myex;	
 	
@@ -75,7 +76,7 @@ individuo::individuo(const individuo& rhs)
       y(rhs.y),
       especie(rhs.especie),
       taxa_morte(rhs.taxa_morte),
-      move(rhs.move),
+      taxa_move(rhs.taxa_move),
       passo(rhs.passo),
       ang_visada(rhs.ang_visada),
       raio(rhs.raio),
@@ -85,6 +86,7 @@ individuo::individuo(const individuo& rhs)
 	  incl_birth(rhs.incl_birth),
 	  incl_death(rhs.incl_death),
 	  const_d_matrix(rhs.const_d_matrix),
+		const_m_matrix(rhs.const_m_matrix),
 	  dens_type(rhs.dens_type),
 	  birth_death_eq(rhs.birth_death_eq)
 	  
@@ -107,11 +109,13 @@ void individuo::update(double dens)
 		this->birth = 0;
 		// ToDo: Implementar aqui modelo mais geral para mortalidade na matriz. Aqui a denso dependencia é igual à do habitat, só muda a mortalidade basal que é maior que no habitat.
 		this->death = this->const_d_matrix*this->taxa_morte+this->incl_death*densi; 
+		this->move = this->const_m_matrix*this->taxa_move;
 	}
   else 
 	{
 		this->birth = this->taxa_basal-this->incl_birth*densi;
 		this->death = this->taxa_morte+this->incl_death*densi;
+		this->move = this->taxa_move;
 		if(this->birth<0){this->birth=0;}
 	}
 	

@@ -25,8 +25,10 @@ private:
     double birth;
     /** Taxa intrínseca de mortalidade quando no habitat e na ausência de outros indivíduos na vizinhança local */
     const double taxa_morte;
-    /** Taxa de movimentação */
-    const double move; 
+    /** Taxa de movimentação no habitat*/
+    const double taxa_move;
+    /** Taxa de movimentação final*/
+    double move;
     /** Tamanho do passo dado a cada movimentação */
     const double passo;
     /** Ângulo de orientação sorteado para a movimentação */
@@ -58,7 +60,9 @@ private:
 	/** Inclinação da curva de denso-depedência para mortalidade */
 	const double incl_death;
 	/** Constante que indica quantas vezes a mortalidade basal na matriz eh maior que no habitat */
-	const double const_d_matrix;// Pensar em como considerar diferentes mortalidades (constantes) em diferentes tipos de matriz 
+	const double const_d_matrix;
+  /** Constante que indica quantas vezes a taxa de movimentação na matriz eh maior que no habitat */
+	const double const_m_matrix;
 	/** Forma como a densidade é calculada (0 = GLOBAL, 1 = LOCAL)*/
 	const int dens_type;
 	//metodos privados
@@ -84,7 +88,7 @@ public:
 			/** Tamanho do passo dado a cada movimentação, veja \ref individuo::anda */
             const double passo,
 			/** Taxa de movimentação */
-			const double move,
+			const double taxa_move,
 			/** Raio de percepção da densidade */
 			const double raio, 
 			/** Taxa intrínseca de natalidade quando no habitat e na ausência de outros indivíduos na vizinhança local */
@@ -97,6 +101,8 @@ public:
 			const double incl_death,
 			/** Constante que indica quantas vezes a mortalidade basal na matriz é maior que no habitat */
 			const double death_mat,
+      /** Constante que indica quantas vezes a taxa de movimentação na matriz é maior que no habitat */
+			const double move_mat,
 			/** Forma como a densidade é calculada (0 = GLOBAL, 1 = LOCAL)*/
 			const int dens_type);
 	/** Construtor de cópia, usado para gerar novos indivíduos por reprodução assexuada.

@@ -24,10 +24,10 @@ using namespace std;
  //
  // Veja a descrição da classe \ref paisagem para o significado dos parâmetros
  // */
-extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double * passo, double * move,
+extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double * passo, double * taxa_move,
 						 double * taxa_basal, double * taxa_morte, double * incl_b, double * incl_d,
 						 int * numb_cells, double * cell_size, int * land_shape, int * density_type, 
-						 double * death_mat, int * inipos, int * bound_condition, int * scape, double * tempo, int * nPop, double * x, double * y, char ** outCode)
+						 double * death_mat, double * move_mat, int * inipos, int * bound_condition, int * scape, double * tempo, int * nPop, double * x, double * y, char ** outCode)
 {
 	stringstream tmps;
 	tmps<<outCode[0];
@@ -37,9 +37,9 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 					Por causa dela nossa biblioteca nao eh standalone */
 	
 	paisagem* floresta = new paisagem(raio[0], N[0], angulo_visada[0], passo[0], 
-									  move[0], taxa_basal[0], taxa_morte[0], incl_b[0], 
+									  taxa_move[0], taxa_basal[0], taxa_morte[0], incl_b[0], 
 									  incl_d[0], numb_cells[0], cell_size[0], land_shape[0],
-									  density_type[0], death_mat[0], inipos[0], bound_condition[0], 
+									  density_type[0], death_mat[0], move_mat[0], inipos[0], bound_condition[0], 
 									  scape);
 	
 	ofstream outputSIM; // ofstream for the output file

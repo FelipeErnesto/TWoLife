@@ -3,9 +3,9 @@
 #include <R.h>
 #include <Rmath.h>
 
-paisagem::paisagem(double raio, int N, double angulo_visada, double passo, double move, double taxa_basal,
+paisagem::paisagem(double raio, int N, double angulo_visada, double passo, double taxa_move, double taxa_basal,
 				   double taxa_morte, double incl_b, double incl_d, int numb_cells, double cell_size, int land_shape,
-				   int density_type, double death_mat, int inipos, int bound_condition, int scape[]):
+				   int density_type, double death_mat, double move_mat, int inipos, int bound_condition, int scape[]):
 	tamanho(numb_cells*cell_size),
 	N(N),
 	tempo_do_mundo(0),
@@ -48,7 +48,7 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 		raio = this->tamanho/sqrt(M_PI);
 	}
 	/* Coloca os indivíduos na paisagem por meio da função populating() */
-	this->populating(raio,N,angulo_visada,passo,move,taxa_basal,taxa_morte,incl_b,incl_d,death_mat,density_type);
+	this->populating(raio,N,angulo_visada,passo,taxa_move,taxa_basal,taxa_morte,incl_b,incl_d,death_mat,move_mat,density_type);
 
 	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
 	{
@@ -66,8 +66,8 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 
 }
 
-void paisagem::populating(double raio, int N, double angulo_visada, double passo, double move, double taxa_basal,
-						  double taxa_morte, double incl_b, double incl_d, double death_m,
+void paisagem::populating(double raio, int N, double angulo_visada, double passo, double taxa_move, double taxa_basal,
+						  double taxa_morte, double incl_b, double incl_d, double death_m, double move_m,
 						  int dens_type)
 {
 	individuo::reset_id(); // reinicia o contador de id dos individuos
@@ -84,13 +84,14 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 														runif(0,360),// orientacao
 														angulo_visada,//angulo de visada
 														passo,//tamanho do passo
-														move, //taxa de movimentacao
+														taxa_move, //taxa de movimentacao
 														raio,//tamanho do raio
 														taxa_basal,// taxa máxima de nascimento
 														99, // semente de numero aleatorio
 														incl_b,
 														incl_d,
 														death_m,
+														move_m,
 														dens_type));
 			// como o popAgentes eh um ponteiro de vetores, ao adicionar enderecos das variaveis, usamos os new. Dessa forma fica mais rapido
 			//pois podemos acessar apenas o endereco e nao ficar guardando todos os valores
@@ -108,13 +109,14 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 														runif(0,360),// orientacao
 														angulo_visada,//angulo de visada
 														passo,//tamanho do passo
-														move, //taxa de movimentacao
+														taxa_move, //taxa de movimentacao
 														raio,//tamanho do raio
 														taxa_basal,// taxa máxima de nascimento
 														99, // semente de numero aleatorio
 														incl_b,
 														incl_d,
 														death_m,
+														move_m,
 														dens_type));
 		}
     }
@@ -130,13 +132,14 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 														runif(0,360),// orientacao
 														angulo_visada,//angulo de visada
 														passo,//tamanho do passo
-														move, //taxa de movimentacao
+														taxa_move, //taxa de movimentacao
 														raio,//tamanho do raio
 														taxa_basal,// taxa máxima de nascimento
 														99, // semente de numero aleatorio
 														incl_b,
 														incl_d,
 														death_m,
+														move_m,
 														dens_type));
 		}
 	}
@@ -290,11 +293,20 @@ bool paisagem::apply_boundary(individuo * const ind) //const
 		if(ind->get_y()>=this->numb_cells*this->cell_size/2 )
 			ind->set_y(ind->get_y()-this->tamanho);
 		break;
+		
+		case 2:
+		if(ind->get_x() < -this->tamanho/2)
+			ind->set_x( -this->tamanho/2 + abs(this->tamanho/2 - ind->get_x()) );
+		if(ind->get_x() >= this->tamanho/2)
+			ind->set_x( this->tamanho/2 - abs(this->tamanho/2 - ind->get_x()) );
+		if(ind->get_y() < -this->tamanho/2)
+			ind->set_y( -this->tamanho/2) + abs(this->tamanho/2 - ind->get_y()) );
+		if(ind->get_y() >= this->tamanho/2)
+			ind->set_x( this->tamanho/2 - abs(this->tamanho/2 - ind->get_y()) );
+		break;
 	}
 	return emigrou;
-	/* TBI
-	case 2: reflexiva
-	*/
+	
 }
 
 
@@ -504,4 +516,10 @@ void paisagem::find_patches(int x, int y, int current_label)
   find_patches(x, y + 1, current_label);
   find_patches(x - 1, y, current_label);
   find_patches(x, y - 1, current_label);
+	
+	// 8-rule
+	find_patches(x + 1, y + 1, current_label);
+  find_patches(x - 1, y + 1, current_label);
+  find_patches(x - 1, y - 1, current_label);
+  find_patches(x + 1, y - 1, current_label);
 }

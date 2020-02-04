@@ -36,13 +36,14 @@ TWoLife <- function (
 					 N=80,
 					 AngVis=360,
 					 passo=5,
-					 move=0.5,
+					 taxa.move=0.5,
 					 taxa.basal=0.6,
 					 taxa.morte=0.1,
 					 incl.birth=0.5/0.01,
 					 incl.death=0,
 					 density.type=0,
 					 death.mat=7,
+					 move.mat=7,
 					 landscape,
 					 tempo=20,
            ini.config=0,
@@ -59,7 +60,7 @@ TWoLife <- function (
               as.integer(N),# 2
               as.double(AngVis),# 3
               as.double(passo),# 4
-              as.double(move),# 5
+              as.double(taxa.move),# 5
               as.double(taxa.basal),# 6
               as.double(taxa.morte),# 7
               as.double(incl.birth),# 8
@@ -69,6 +70,7 @@ TWoLife <- function (
               as.integer(landscape$land.shape),# 12
               as.integer(density.type),# 13
               as.double(death.mat), # 14
+							as.double(move.mat), # 14
               as.integer(ini.config), #15
               as.integer(landscape$bound.condition), #16
               as.integer(landscape$scape), #17
@@ -113,6 +115,7 @@ b <- LHS$b[nite]
 d <- LHS$d[nite]
 angvis <- LHS$angvis[nite]
 dm <- LHS$dm[nite]
+mm <- LHS$mm[nite]
 
 #Arquivo metadata com os valores dos parâmetros
 file.create("METADATA.txt")
@@ -127,6 +130,7 @@ cat(paste("b:", b), file = "METADATA.txt", append = TRUE, sep = "\n")
 cat(paste("d:", d), file = "METADATA.txt", append = TRUE, sep = "\n")
 cat(paste("angvis:", angvis), file = "METADATA.txt", append = TRUE, sep = "\n")
 cat(paste("dm:", dm), file = "METADATA.txt", append = TRUE, sep = "\n")
+cat(paste("mm:", mm), file = "METADATA.txt", append = TRUE, sep = "\n")
 
 
 HabProp <- seq(0, 100, 5)
@@ -150,7 +154,7 @@ for(i in HabProp)
 				#o.c <- i*100 + j*10 + k #Identificador do output
 				o.c <- paste("output-",h,"_",f, "_", k,"_", l, ".txt", sep="")
 				#Lembrar de ajustar o tempo pra chegar no equilibrio
-				TWoLife(raio=R, N=300, AngVis=angvis, passo=s, move=delta, taxa.basal=lamb0, taxa.morte=mu0, incl.birth=b, incl.death=d, density.type=1, death.mat=dm, landscape = land, tempo=50, ini.config=1, out.code=o.c)
+				TWoLife(raio=R, N=300, AngVis=angvis, passo=s, taxa.move=delta, taxa.basal=lamb0, taxa.morte=mu0, incl.birth=b, incl.death=d, density.type=1, death.mat=dm, move.mat=mm, landscape = land, tempo=50, ini.config=1, out.code=o.c)
 			}
 		}
 	}

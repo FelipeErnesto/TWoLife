@@ -55,7 +55,7 @@ private:
 					/** Passo de caminhada dos indivíduos da população */
 					const double passo,
 					/** Taxa de movimentação dos individuos da população */
-					const double move,
+					const double taxa_move,
 					/** Taxa de nascimento de um indivíduo no habitat favorável e sem vizinhos */
 					const double taxa_basal,
 					/** Taxa de mortalidade dos indivíduos */
@@ -66,6 +66,8 @@ private:
 					const double incl_d,
 					/** Constante que indica quantas vezes a mortalidade basal na matriz é maior que no habitat */
 					const double death_m,
+					/** Constante que indica quantas vezes a taxa de movimentação na matriz é maior que no habitat */
+					const double move_m,
 					/** Tipo de densidade (0 = GLOBAL, 1 = LOCAL) */
 					const int dens_type
 					);
@@ -98,7 +100,7 @@ public:
             /** Passo de caminhada dos indivíduos */
 			const double passo,
 			/** Taxa de movimentação dos indivíduos */
-			const double move,
+			const double taxa_move,
 			/** Taxa de nascimento de um indivíduo no habitat favorável e sem vizinhos */
 			const double taxa_basal,
 			/** Taxa de morte dos indivíduos */
@@ -117,6 +119,8 @@ public:
 			const int density_type,
 			/** Constante que indica quantas vezes a mortalidade basal na matriz é maior que no habitat */
 			const double death_mat,
+			/** Constante que indica quantas vezes a mortalidade basal na matriz é maior que no habitat */
+			const double move_mat,
 			/** Posição dos indivíduos no início da simulação (0 = origem; 1 = aleatória com distribuição uniforme na paisagem; 2 = aleatória com distribuição normal na paisagem)*/
 			const int inipos,
 			/** Condição de contorno (0 = absortiva, 1 = periódica, 2 = reflexiva)*/
