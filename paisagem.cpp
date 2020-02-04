@@ -300,7 +300,7 @@ bool paisagem::apply_boundary(individuo * const ind) //const
 		if(ind->get_x() >= this->tamanho/2)
 			ind->set_x( this->tamanho/2 - abs(this->tamanho/2 - ind->get_x()) );
 		if(ind->get_y() < -this->tamanho/2)
-			ind->set_y( -this->tamanho/2) + abs(this->tamanho/2 - ind->get_y()) );
+			ind->set_y( -this->tamanho/2 + abs(this->tamanho/2 - ind->get_y()) );
 		if(ind->get_y() >= this->tamanho/2)
 			ind->set_x( this->tamanho/2 - abs(this->tamanho/2 - ind->get_y()) );
 		break;
