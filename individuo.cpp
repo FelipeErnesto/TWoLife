@@ -33,10 +33,10 @@ individuo::individuo(double x, double y, int especie, double taxa_morte,
 	y(y),
 	especie(especie),
 	taxa_morte(taxa_morte),
-	taxa_move(taxa_move),
-	passo(passo),
 	orientacao(orientacao),
 	ang_visada(angulo_visada),
+	passo(passo),
+	taxa_move(taxa_move),
 	raio(raio),
 	taxa_basal(taxa_basal),
 	semente(semente),
@@ -70,28 +70,28 @@ individuo::individuo(double x, double y, int especie, double taxa_morte,
  * Usa notacao :atributo(valor) ao inves de atribuicão. 
  * Funcao chamada por paisagem::realiza_acao() quando a ação é um nascimentto
  * @param rhs ponteiro dereferenciado para o pai */
-individuo::individuo(const individuo& rhs)
-    :id(++MAXID),
-      x(rhs.x),
-      y(rhs.y),
-      especie(rhs.especie),
-      taxa_morte(rhs.taxa_morte),
-      taxa_move(rhs.taxa_move),
-      passo(rhs.passo),
-      ang_visada(rhs.ang_visada),
-      raio(rhs.raio),
-      taxa_basal(rhs.taxa_basal),
-      tipo_habitat(rhs.tipo_habitat),
-      semente(rhs.semente),
-	  incl_birth(rhs.incl_birth),
-	  incl_death(rhs.incl_death),
-	  const_d_matrix(rhs.const_d_matrix),
-		const_m_matrix(rhs.const_m_matrix),
-	  dens_type(rhs.dens_type),
-	  birth_death_eq(rhs.birth_death_eq)
+individuo::individuo(const individuo& rhs):
+	id(++MAXID),
+  x(rhs.x),
+  y(rhs.y),
+  especie(rhs.especie),
+  taxa_morte(rhs.taxa_morte),
+	ang_visada(rhs.ang_visada),
+	passo(rhs.passo),
+  taxa_move(rhs.taxa_move),
+  raio(rhs.raio),
+  taxa_basal(rhs.taxa_basal),
+	semente(rhs.semente),
+	incl_birth(rhs.incl_birth),
+	incl_death(rhs.incl_death),
+	const_d_matrix(rhs.const_d_matrix),
+	const_m_matrix(rhs.const_m_matrix),
+	dens_type(rhs.dens_type),
+	tipo_habitat(rhs.tipo_habitat),
+	birth_death_eq(rhs.birth_death_eq)
 	  
 { //precisamos dessa chave e da que fecha ela?
-	
+	this->orientacao = runif(0,360);
 }
 
 /** \brief Método de atualização dos indivíduos 
@@ -154,7 +154,11 @@ int individuo::sorteia_acao()
 
 void individuo::anda()
 {
-		this->orientacao+= runif(-ang_visada/2.0, ang_visada/2.0);//random way point
+		this->orientacao+= runif(-this->ang_visada/2.0, this->ang_visada/2.0);//random way point
+		if(this->orientacao < 0)
+			this->orientacao +=360;
+		else if(this->orientacao >= 360)
+			this->orientacao -= 360;
     double oriRad=this->orientacao*M_PI/180.0;//tranforma em radianos para poder calcular as distancias das posicoes x e y
     double dx= cos(oriRad)*this->passo;
     double dy= sin(oriRad)*this->passo;
