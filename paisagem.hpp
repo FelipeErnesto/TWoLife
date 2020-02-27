@@ -72,8 +72,10 @@ private:
 					const int dens_type
 					);
 
-	/** Atualiza a lista de vizinhos de um indivíduo */
-    void atualiza_vizinhos(individuo * const ind) const;
+	  /** Cria a lista de vizinhos de um indivíduo */
+    void set_vizinhos(individuo * const ind) const;
+  	/** Atualiza a lista de vizinhos de um indivíduo */
+    void atualiza_vizinhos(int acao, int ind) const;
     /** Informa o indivíduo o tipo de habitat (matriz ou habitat) correspondente à sua atual posição, atualizando \ref individuo::tipo_habitat */
     void atualiza_habitat(individuo * const ind) const;
     /** Informa o indivíduo o fragmento correspondente à sua atual posição, atualizando \ref individuo::patch_label */
@@ -130,7 +132,7 @@ public:
 			); //construtor
 
 	/** Atualiza as  */
-    void update();//atualizador
+    void update(int acao, int ind);//atualizador
     /** Seleciona o individuo com menor tempo até o proximo evento para realizar uma ação */
 	int sorteia_individuo();
 	/** Após a seleção do indivíduo que realizará a ação, sorteia uma das três ações possíveis de acordo com suas respectivas taxas e retorna a ação sorteada para a paisagem

@@ -1,3 +1,6 @@
+library(doMC)
+registerDoMC(8)
+
 # Função "wrapper" para a chamada em C:
 #
 # Os passos abaixo foram adaptados de http://users.stat.umn.edu/~geyer/rc/
@@ -141,7 +144,7 @@ for(i in HabProp)
 {
 	for(j in HabFrag)
 	{
-		for(k in Replica)
+		foreach(k = Replica) %dopar%
 		{
 			for(l in Repeticao)
 			{

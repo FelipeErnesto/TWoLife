@@ -41,8 +41,6 @@ private:
     double densi_max;
     /** Raio de percepção da densidade */
     double raio;
-    /** Vetor de vizinhanca */
-    vector<individuo*> lisViz;//vetor de vizinhanca    ----//CAMADA PERCEPTIVA
     /** Taxa intrínseca de natalidade quando no habitat e na ausência de outros indivíduos na vizinhança local */
     const double taxa_basal;
     /** Identificdor do tipo de habitat do pixel correspondente à atual posição do indivíduo (0 = matriz; 1 = habitat) */
@@ -70,6 +68,8 @@ private:
     void sorteiaTempo();
 	
 public:
+    /** Vetor de vizinhanca */
+    vector<individuo*> lisViz;//vetor de vizinhanca    ----//CAMADA PERCEPTIVA
 	/** Construtor da classe individuo. Deve ser chamado pela paisagem para posicionar os 
 	 * indivíduos que já estão na paisagem no início da simulação. */
     individuo(

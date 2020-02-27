@@ -77,7 +77,7 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 		int patch_neo = floresta->get_individuos(ind_neo)->get_patch();
 		
 		bool emigrou = floresta->realiza_acao(acao, ind_neo);
-		floresta->update();
+		floresta->update(acao, ind_neo);
 
 		if(acao==2 && !emigrou)
 		{

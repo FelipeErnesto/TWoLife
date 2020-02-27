@@ -52,7 +52,7 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 
 	for(unsigned int i=0; i<this->popIndividuos.size(); i++)
 	{
-		this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
+		this->set_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
 		this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
 		this->atualiza_patch(this->popIndividuos[i]);
         }
@@ -145,28 +145,29 @@ void paisagem::populating(double raio, int N, double angulo_visada, double passo
 	}
 }
 
-void paisagem::update()
+void paisagem::update(int acao, int ind)
 {
-    if(this->popIndividuos.size()>0)
-    {
-	// Este for loop pode ser paralelizado, pois o que acontece com cada individuo eh independente
-	#ifdef PARALLEL
-	#pragma omp parallel for
-	#endif
-        for(unsigned int i=0; i<this->popIndividuos.size(); i++)
-        {
-            this->atualiza_vizinhos(this->popIndividuos[i]);//atualiza os vizinhos
-            this->atualiza_habitat(this->popIndividuos[i]);//retorna o tipo de habitat
-            this->atualiza_patch(this->popIndividuos[i]);
-        }
-		// Este loop não é parelelizado, APESAR de ser independente, para garantir que as funcoes
-		// aleatorias sao chamadas sempre na mesma ordem (garante reprodutibilidade)
-        for(unsigned int i=0; i<this->popIndividuos.size(); i++)
-        {
+	if(this->popIndividuos.size()>0)
+	{
+		switch (acao)
+		{
+			case 0:
+			break;
+			case 1:
+			this->atualiza_habitat(this->popIndividuos[this->popIndividuos.size()-1]);
+			this->atualiza_patch(this->popIndividuos[this->popIndividuos.size()-1]);
+			break;
+			case 2:
+			this->atualiza_habitat(this->popIndividuos[ind]);
+			this->atualiza_patch(this->popIndividuos[ind]);
+			break;
+		}
+		
+		for(unsigned int i=0; i<this->popIndividuos.size(); i++)
+		{
 			double dsty=this->calcDensity(popIndividuos[i]);
-            this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
-        }
-
+			this->popIndividuos[i]->update(dsty);   //e atualiza o individuo i da populacao
+		}
 	}
 }
 
@@ -193,6 +194,7 @@ bool paisagem::realiza_acao(int acao, int lower) //TODO : criar matriz de distan
     switch(acao) //0 eh morte, 1 eh nascer, 2 eh andar
     {
     case 0:
+				this->atualiza_vizinhos(acao, lower);
         delete this->popIndividuos[lower];
         this->popIndividuos.erase(this->popIndividuos.begin()+lower);
         break;
@@ -202,11 +204,16 @@ bool paisagem::realiza_acao(int acao, int lower) //TODO : criar matriz de distan
         //Novo metodo para fazer copia do individuo:
         chosen = new individuo(*this->popIndividuos[lower]);
         this->popIndividuos.push_back(chosen);
+				this->atualiza_vizinhos(acao, lower);
         break;
 
     case 2:
         this->popIndividuos[lower]->anda();
-	emigrou = this->apply_boundary(popIndividuos[lower]);
+				emigrou = this->apply_boundary(popIndividuos[lower]);
+				if(emigrou)
+					this->realiza_acao(0, lower);
+				else if(!emigrou)
+					this->atualiza_vizinhos(acao, lower);
 		break;
     }
 	return emigrou;
@@ -251,14 +258,6 @@ bool paisagem::apply_boundary(individuo * const ind) //const
 		{
 			if(rad*rad < (double)ind->get_x()*(double)ind->get_x()+(double)ind->get_y()*(double)ind->get_y())
 			{
-				for(unsigned int i=0; i<popIndividuos.size();i++)
-				{
-					if(this->popIndividuos[i]->get_id()==(int)ind->get_id())
-					{
-						delete this->popIndividuos[i];
-						this->popIndividuos.erase(this->popIndividuos.begin()+i);
-					}
-				}
 				emigrou = true;
 			}
 		}
@@ -270,14 +269,6 @@ bool paisagem::apply_boundary(individuo * const ind) //const
 			   (double)ind->get_y()>this->numb_cells*this->cell_size/2 ||
 			   (double)ind->get_y()<=(this->numb_cells*this->cell_size/-2))
 			{
-				for(unsigned int i=0; i<popIndividuos.size();i++)
-				{
-					if(this->popIndividuos[i]->get_id()==(int)ind->get_id()) //DUVIDA: porque tem int?
-					{
-						delete this->popIndividuos[i];
-						this->popIndividuos.erase(this->popIndividuos.begin()+i);
-					}
-				}
 				emigrou = true;
 			}
 		}
@@ -451,7 +442,7 @@ double paisagem::calcDensity(const individuo* ind1) const
   deve alterá-los. Previne vários erros e pode otimizar compilação
 */
 
-void paisagem::atualiza_vizinhos(individuo * const ag1) const //acessando os vizinhos dos agentes
+void paisagem::set_vizinhos(individuo * const ag1) const //acessando os vizinhos dos agentes
 {
 	vector <individuo*> listViz;
 	if(ag1->get_densType()==0) //dens_type poderia voltar como propriedade da paisagem. Facilitariam as coisas. Como muitas propriedades e métodos deste código, elas podem ser interpretadas das duas formas (como do individuo ou como da paisagem). O que está dando confusão é que estamos fazendo um IBM, mas para algumas situações estamos querendo simular dinâmicas cujas variáveis de interesse são propriedades populacionais e não do indivíduo. Se aceito, limar o método get_densType() do individuo.h.
@@ -476,6 +467,64 @@ void paisagem::atualiza_vizinhos(individuo * const ag1) const //acessando os viz
 	}
 	ag1->set_vizinhos(listViz);
 
+}
+
+void paisagem::atualiza_vizinhos(int acao, int ind) const //acessando os vizinhos dos agentes
+{
+	vector <individuo*> listViz;
+	switch(acao)
+	{
+		case 0:
+		for(unsigned int i=0; i<this->popIndividuos[ind]->NBHood_size()-1; i++)
+		{
+			for(unsigned int j=0; j<this->popIndividuos[ind]->lisViz[i]->NBHood_size()-1; j++)
+			{
+				if(this->popIndividuos[ind]->lisViz[i]->lisViz[j]->get_id() == this->popIndividuos[ind]->get_id())
+				{
+					this->popIndividuos[ind]->lisViz[i]->lisViz.erase(this->popIndividuos[ind]->lisViz[i]->lisViz.begin()+j);
+				}
+			}
+		}
+		break;
+		
+		case 1:
+		for(unsigned int i=0; i<this->popIndividuos[ind]->NBHood_size()-1; i++)
+		{
+			this->popIndividuos[ind]->lisViz[i]->lisViz.push_back(this->popIndividuos[this->popIndividuos.size()-1]);
+			listViz.push_back(this->popIndividuos[ind]->lisViz[i]);
+		}		
+		
+		this->popIndividuos[ind]->lisViz.push_back(this->popIndividuos[this->popIndividuos.size()-1]);
+		listViz.push_back(this->popIndividuos[ind]);
+		this->popIndividuos[this->popIndividuos.size()-1]->set_vizinhos(listViz);
+		break;
+
+		case 2:
+		for(unsigned int i=0; i<this->popIndividuos[ind]->NBHood_size()-1; i++)
+		{
+			for(unsigned int j=0; j<this->popIndividuos[ind]->lisViz[i]->NBHood_size()-1; j++)
+			{
+				if(this->popIndividuos[ind]->lisViz[i]->lisViz[j]->get_id() == this->popIndividuos[ind]->get_id())
+				{
+					this->popIndividuos[ind]->lisViz[i]->lisViz.erase(this->popIndividuos[ind]->lisViz[i]->lisViz.begin()+j);
+				}
+			}
+		}
+		
+		double rad = (double) this->popIndividuos[ind]->get_raio();
+		for(unsigned int k=0; k<this->popIndividuos.size(); k++)
+		{
+			if(k==ind)
+				continue;
+			if(this->calcDist(this->popIndividuos[ind], this->popIndividuos[k]) <= rad)
+			{
+				listViz.push_back(this->popIndividuos[k]);
+				this->popIndividuos[k]->lisViz.push_back(this->popIndividuos[ind]);
+			}
+		}
+		this->popIndividuos[ind]->set_vizinhos(listViz);		
+		break;
+	}
 }
 
 void paisagem::atualiza_habitat(individuo * const ind) const
