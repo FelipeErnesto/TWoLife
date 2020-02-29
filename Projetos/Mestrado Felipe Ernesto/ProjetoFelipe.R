@@ -92,8 +92,7 @@ TWoLife <- function (
 }
 
 projetoFelipe<-function()
-{#Lembrar de citar Mandai em qualquer produto deste trabalho
-
+{
 #Diretório que receberá os outputs para esta combinação de parâmetros
 #Sempre que for começar a rodar lembrar de colocar "run 1" em iteration.txt
 ite <- file("iteration.txt", "r")
@@ -138,27 +137,24 @@ cat(paste("mm:", mm), file = "METADATA.txt", append = TRUE, sep = "\n")
 
 HabProp <- seq(0, 100, 5)
 HabFrag <- c(0.8)
-Replica <- 1:10
-Repeticao <- 1:5
+Rep <- data.frame(Conf = rep(1:10, each=5), Rep = rep(1:5, 10))
 for(i in HabProp)
 {
 	for(j in HabFrag)
 	{
-		foreach(k = Replica) %dopar%
+		foreach(k = iter(Rep, by="row")) %dopar%
 		{
-			for(l in Repeticao)
-			{
+
 				h = formatC(i, width = 3, format = "d", flag = "0")
 				f = format(j, nsmall=2)
-				r = formatC(k, width = 5, format = "d", flag = "0")
-				scape <- readLandscape(h, f, r, 128)
+				c = formatC(k$Conf, width = 5, format = "d", flag = "0")
+				scape <- readLandscape(h, f, c, 128)
 				land <- list(numb.cells = 128, cell.size = 0.03, bound.condition = 0, land.shape = 1, scape = scape )
 				class(land) <- "landscape"
-				#o.c <- i*100 + j*10 + k #Identificador do output
-				o.c <- paste("output-",h,"_",f, "_", k,"_", l, ".txt", sep="")
-				#Lembrar de ajustar o tempo pra chegar no equilibrio
+				c <- formatC(k$Conf, width = 2, format = "d", flag = "0")
+				o.c <- paste("output-",f,"_",h, "_", c,"_", k$Rep, ".txt", sep="")
 				TWoLife(raio=R, N=300, AngVis=angvis, passo=s, taxa.move=delta, taxa.basal=lamb0, taxa.morte=mu0, incl.birth=b, incl.death=d, density.type=1, death.mat=dm, move.mat=mm, landscape = land, tempo=50, ini.config=1, out.code=o.c)
-			}
+
 		}
 	}
 }
@@ -168,31 +164,3 @@ setwd("..")
 }
 
 projetoFelipe()
-
-
-
-#Acho que esta função não vai estar sendo necessária
-#modelRun <- function (my.pars) {
-#    return(mapply(oneRun, my.pars[,1], my.pars[,2], my.pars[,3], my.pars[,4]))
-#}
-
-#file.create("iteration.txt")
-#cat("run 1", file = "iteration.txt", append = TRUE, sep = "\n")
-
-#TWoLife <- function (raio=0.1, N=80, AngVis=360, passo=5, move=0.5, taxa.basal=0.6, taxa.morte=0.1, incl.birth=0.5/0.01, incl.death=0, density.type=0, death.mat=7, landscape, tempo=20, ini.config=0, out.code=1)
-#Nao entraram
-#N
-#AngVis
-#ini.config (lembrar de igualar a 1)
-#density.type (lembrar de igualar a 1)
-#landscape (how the hell eu vou enfiar isso no mapply) ideia: fazer vetor de paisagens
-#out.code (como enfiar um contador no mapply?)
-#nboot e maxIt não sei escolher
-
-#analises("output-00234.txt", npop)
-
-#TODO:
-#ler paisagens
-#colocar correlações OK
-#arrumar analises OK
-#definir valores das variáveis constantes (e opções tipo nboot e maxIt)
