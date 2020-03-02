@@ -35,14 +35,13 @@ eventos<-function(arquivo, npop){
 		p <- strtoi(line[4])
 		ID <- strtoi(line[3])
 		t <- as.double(line[1])
+		ind <- match(ID, IDlist)
 		
 		if(acao == 0)
-		{
-			ind <- match(ID, IDlist)
-			
+		{	
 			eventos <- rbind(eventos, data.frame(t=c(t), ID=c(ID), Event = factor(c("d"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(p), N = c(patchPop[p+1])))	
 			
-			if(patches[ind,1]==1 & patches[ind,2]>1)
+			if(patches[ind,1]==0 & patches[ind,2]>0)
 			{
 				saiu <- saidas[saidas$Patch==patches[ind,2] & saidas$ID==ID,]
 				saidas <- saidas[saidas$Patch!=patches[ind,2] | saidas$ID!=ID,]
@@ -75,16 +74,15 @@ eventos<-function(arquivo, npop){
 		}
 		if(acao == 2)
 		{
-			ind <- match(ID, IDlist)
 			if( p!=patches[ind, 1]  )
 			{
 				patches[ind,3] <- patches[ind,2]
 				patches[ind,2] <- patches[ind,1]
 				patches[ind,1] <- p
 
-				if(patches[ind,1]>1)
+				if(patches[ind,1]>0)
 				{
-					if(patches[ind,2] > 1)
+					if(patches[ind,2] > 0)
 					{
 						eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("e"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,2]), N = c(patchPop[patches[ind,2]+1])))
 						eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("i"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,1]), N = c(patchPop[patches[ind,1]+1])))
@@ -103,7 +101,7 @@ eventos<-function(arquivo, npop){
 						eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("entrou"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,1]), N = c(patchPop[patches[ind,1]+1])))
 					}
 				}
-				else if(patches[ind,1]==1)
+				else if(patches[ind,1]==0)
 				{
 					saidas <- rbind(saidas, data.frame(t=c(t), Patch=c(patches[ind,2]), ID=c(ID)))
 					eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("saiu"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,2]), N = c(patchPop[patches[ind,2]+1])))
@@ -117,11 +115,11 @@ eventos<-function(arquivo, npop){
 
 		if(acao == 3)
 		{
-			if(patches[ind,1]>1)
+			if(patches[ind,1]>0)
 			{
 				eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("e"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,1]), N = c(patchPop[patches[ind,1]+1])))
 			}
-			else if(patches[ind,1]==1 & patches[ind,2]>1)
+			else if(patches[ind,1]==0 & patches[ind,2]>0)
 			{
 				saiu <- saidas[saidas$Patch==patches[ind,2] & saidas$ID==ID,]
 				saidas <- saidas[saidas$Patch!=patches[ind,2] | saidas$ID!=ID,]
@@ -129,7 +127,7 @@ eventos<-function(arquivo, npop){
 			}
 			
 			patchPop[p+1] <- patchPop[p+1] - 1
-			ind <- match(ID, IDlist)
+
 			if(length(IDlist)>2)
 			{
 				patches<-patches[-ind,]
