@@ -21,6 +21,7 @@ paisagem::paisagem(double raio, int N, double angulo_visada, double passo, doubl
 			{
 				// transforma o vetor scape recebido do construtor em uma matriz
 				this->landscape[i][j]=scape[j*numb_cells+i];
+				this->patches[i][j]=0;
 			}
 		}
 

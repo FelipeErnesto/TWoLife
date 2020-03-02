@@ -77,8 +77,12 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 		int patch_neo = floresta->get_individuos(ind_neo)->get_patch();
 		
 		bool emigrou = floresta->realiza_acao(acao, ind_neo);
-		floresta->update(acao, ind_neo);
-
+		
+		if(acao==2 && emigrou)
+			floresta->update(0, ind_neo);
+		else
+			floresta->update(acao, ind_neo);
+		
 		if(acao==2 && !emigrou)
 		{
 			x_neo = floresta->get_individuos(ind_neo)->get_x();
@@ -92,13 +96,7 @@ extern "C" void TWoLife (double * raio, int * N, double * angulo_visada, double 
 	}
 	outputSIM<< "EOF\n";
 	outputSIM.close(); //end of output file
-	
-	
-	*nPop = floresta->conta_individuos();
-	for (int i =0; i < *nPop; i ++) {
-		x[i] = floresta->get_individuos(i)->get_x();
-		y[i] = floresta->get_individuos(i)->get_y();
-	} //DUVIDA: porque x[i] e y[i] nao tem asterisco antes?
+
 	delete floresta;
 	PutRNGstate();
 }
