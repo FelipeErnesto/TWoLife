@@ -2,30 +2,36 @@ library(doMC)
 registerDoMC(8)
 
 eventos<-function(arquivo, npop){
+	nlines <- as.integer(unlist(strsplit(system(paste("wc -l", arquivo), intern=TRUE), split=" "))[1])
 	dados = file(arquivo, "r")
 	dpaisagem = readLines(dados, n=9)
 	npatches = strtoi(unlist(strsplit(dpaisagem [4], " "))[3])
 
-	IDlist<-rep(0, npop)
-	patches <- matrix( rep(0, 3*npop), nrow = npop, ncol = 3 )
-	eventos <- data.frame(t=double(), ID=integer(), Event = factor(), Patch = integer(), N = integer()) # Data frame que armezana os eventos relacionados às quatro taxas
-	levels(eventos$Event) <- c("b", "d", "i", "e", "saiu", "entrou")
+	IDmax <- 1
+	patches1 <- rep(-1, nlines)
+	patches2 <- rep(-1, nlines)
+	patches3 <- rep(-1, nlines)
+	eventost <- as.double(rep(-1, nlines))
+	eventosID <- as.integer(rep(-1, nlines))
+	eventosEvent <- as.integer(rep(-1, nlines))
+	eventosPatch <- as.integer(rep(-1, nlines))
+	eventosN <- as.integer(rep(-1, nlines))
 	patchPop <- rep(0, npatches+1)
-	saidas <- data.frame(t=c(), Patch=c(), ID=c())
+	saidas <- data.frame(t=c(), Patch=c(), ID=c(), nlin=c())
 
 	for(i in 1:npop)
 	{
 		lin = readLines(dados, n=1)
 		lin<-strsplit(lin, " ")
 		line <- unlist(lin)
-		patches[i,1]<-strtoi(line[3])
-		patches[i,2] <- -1
-		patches[i,3] <- -1
-		IDlist[i] <- strtoi(line[2])
+		patches1[IDmax] <- strtoi(line[3])
+		patches2[IDmax] <- -1
+		patches3[IDmax] <- -1
+		IDmax <- IDmax + 1
 		patchPop[strtoi(line[3])+1] <- patchPop[strtoi(line[3])+1]+1
 	}
-	maxID = npop
-
+	
+	nlin <- 1
 	lin = readLines(dados, n=1)
 	while(lin != "EOF")
 	{
@@ -35,110 +41,128 @@ eventos<-function(arquivo, npop){
 		p <- strtoi(line[4])
 		ID <- strtoi(line[3])
 		t <- as.double(line[1])
-		ind <- match(ID, IDlist)
+		ind <- ID
 		
 		if(acao == 0)
-		{	
-			eventos <- rbind(eventos, data.frame(t=c(t), ID=c(ID), Event = factor(c("d"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(p), N = c(patchPop[p+1])))	
-			
-			if(patches[ind,1]==0 & patches[ind,2]>0)
+		{
+			eventost[nlin] <- t
+			eventosID[nlin] <- ID
+			eventosEvent[nlin] <- 2
+			eventosPatch[nlin] <- p
+			eventosN[nlin] <- patchPop[p+1]
+			nlin <- nlin + 1
+
+			if(patches1[ind]==0 & patches2[ind]>0)
 			{
-				saiu <- saidas[saidas$Patch==patches[ind,2] & saidas$ID==ID,]
-				saidas <- saidas[saidas$Patch!=patches[ind,2] | saidas$ID!=ID,]
-				eventos[eventos$t == saiu$t & eventos$ID == ID & eventos$Event == "saiu" & eventos$Patch == patches[ind,2], ]$Event <- "e"
+				saiu <- saidas[saidas$Patch==patches2[ind] & saidas$ID==ID,]
+				saidas <- saidas[saidas$Patch!=patches2[ind] | saidas$ID!=ID,]
+				eventosEvent[saiu$nlin] <- 4
 			}
 			
 			patchPop[p+1] <- patchPop[p+1] - 1
 			
-			if(length(IDlist)>2)
-			{
-				patches<-patches[-ind,]
-				IDlist<-IDlist[-ind]
-			}
-			
-			else
-			{
-					patches<-patches[-ind,]
-					patches<-matrix(patches, nrow=1, ncol=3)
-					IDlist<-IDlist[-ind]
-			}
 		}
 
 		if(acao == 1)
 		{
-			maxID<-maxID+1
-			eventos <- rbind(eventos, data.frame(t=c(t), ID=c(ID), Event = factor(c("b"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(p), N = c(patchPop[p+1])))
+			eventost[nlin] <- t
+			eventosID[nlin] <- ID
+			eventosEvent[nlin] <- 1
+			eventosPatch[nlin] <- p
+			eventosN[nlin] <- patchPop[p+1]
+			nlin <- nlin + 1
 			patchPop[p+1] <- patchPop[p+1] + 1
-			patches<-rbind(patches, c(p, -1, -1))
-			IDlist<- c(IDlist, maxID)
+			patches1[IDmax] <- p
+			patches2[IDmax] <- -1
+			patches3[IDmax] <- -1
+			IDmax <- IDmax + 1
 		}
 		if(acao == 2)
 		{
-			if( p!=patches[ind, 1]  )
+			if( p!=patches1[ind]  )
 			{
-				patches[ind,3] <- patches[ind,2]
-				patches[ind,2] <- patches[ind,1]
-				patches[ind,1] <- p
+				patches3[ind] <- patches2[ind]
+				patches2[ind] <- patches1[ind]
+				patches1[ind] <- p
 
-				if(patches[ind,1]>0)
+				if(patches1[ind]>0)
 				{
-					if(patches[ind,2] > 0)
+					if(patches2[ind] > 0)
 					{
-						eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("e"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,2]), N = c(patchPop[patches[ind,2]+1])))
-						eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("i"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,1]), N = c(patchPop[patches[ind,1]+1])))
+						eventost[nlin] <- t
+						eventosID[nlin] <- ID
+						eventosEvent[nlin] <- 4
+						eventosPatch[nlin] <- patches2[ind]
+						eventosN[nlin] <- patchPop[patches2[ind]+1]
+						nlin <- nlin + 1
+						eventost[nlin] <- t
+						eventosID[nlin] <- ID
+						eventosEvent[nlin] <- 3
+						eventosPatch[nlin] <- patches1[ind]
+						eventosN[nlin] <- patchPop[patches1[ind]+1]
+						nlin <- nlin + 1
 					}
 					
-					else if(patches[ind,3] > -1 & patches[ind,3]!=patches[ind,1])
+					else if(patches3[ind] > -1 & patches3[ind]!=patches1[ind])
 					{
-						saiu <- saidas[saidas$Patch==patches[ind,3] & saidas$ID==ID,]
-						saidas <- saidas[saidas$Patch!=patches[ind,3] | saidas$ID!=ID,]
-						eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("i"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,1]), N = c(patchPop[patches[ind,1]+1])))
-						eventos[eventos$t == saiu$t & eventos$ID == ID & eventos$Event == "saiu" & eventos$Patch == patches[ind,3], ]$Event <- "e"
+						saiu <- saidas[saidas$Patch==patches3[ind] & saidas$ID==ID,]
+						saidas <- saidas[saidas$Patch!=patches3[ind] | saidas$ID!=ID,]
+						eventost[nlin] <- t
+						eventosID[nlin] <- ID
+						eventosEvent[nlin] <- 3
+						eventosPatch[nlin] <- patches1[ind]
+						eventosN[nlin] <- patchPop[patches1[ind]+1]
+						nlin <- nlin + 1
+						eventosEvent[saiu$nlin] <- 4
 					}
-					else if(patches[ind,3]==patches[ind,1])
+					else if(patches3[ind]==patches1[ind])
 					{
-						saidas <- saidas[saidas$Patch!=patches[ind,3] | saidas$ID!=ID,]
-						eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("entrou"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,1]), N = c(patchPop[patches[ind,1]+1])))
+						saidas <- saidas[saidas$Patch!=patches3[ind] | saidas$ID!=ID,]
+						eventost[nlin] <- t
+						eventosID[nlin] <- ID
+						eventosEvent[nlin] <- 6
+						eventosPatch[nlin] <- patches1[ind]
+						eventosN[nlin] <- patchPop[patches1[ind]+1]
+						nlin <- nlin + 1
 					}
 				}
-				else if(patches[ind,1]==0)
+				else if(patches1[ind]==0)
 				{
-					saidas <- rbind(saidas, data.frame(t=c(t), Patch=c(patches[ind,2]), ID=c(ID)))
-					eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("saiu"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,2]), N = c(patchPop[patches[ind,2]+1])))
+					saidas <- rbind(saidas, data.frame(t=c(t), Patch=c(patches2[ind]), ID=c(ID), nlin=c(nlin)))
+					eventost[nlin] <- t
+					eventosID[nlin] <- ID
+					eventosEvent[nlin] <- 5
+					eventosPatch[nlin] <- patches2[ind]
+					eventosN[nlin] <- patchPop[patches2[ind]+1]
+					nlin <- nlin + 1
 				}
 				
-				patchPop[patches[ind,1]+1] <- patchPop[patches[ind,1]+1] + 1
-				patchPop[patches[ind,2]+1] <- patchPop[patches[ind,2]+1] - 1
+				patchPop[patches1[ind]+1] <- patchPop[patches1[ind]+1] + 1
+				patchPop[patches2[ind]+1] <- patchPop[patches2[ind]+1] - 1
 				
 			}
 		}
 
 		if(acao == 3)
 		{
-			if(patches[ind,1]>0)
+			if(patches1[ind]>0)
 			{
-				eventos <- rbind(eventos, data.frame(t=c(t), ID = c(ID), Event = factor(c("e"), levels=c("b", "d", "i", "e", "saiu", "entrou")), Patch = c(patches[ind,1]), N = c(patchPop[patches[ind,1]+1])))
+				eventost[nlin] <- t
+				eventosID[nlin] <- ID
+				eventosEvent[nlin] <- 4
+				eventosPatch[nlin] <- patches1[ind]
+				eventosN[nlin] <- patchPop[patches1[ind]+1]
+				nlin <- nlin + 1
 			}
-			else if(patches[ind,1]==0 & patches[ind,2]>0)
+			else if(patches1[ind]==0 & patches2[ind]>0)
 			{
-				saiu <- saidas[saidas$Patch==patches[ind,2] & saidas$ID==ID,]
-				saidas <- saidas[saidas$Patch!=patches[ind,2] | saidas$ID!=ID,]
-				eventos[eventos$t == saiu$t & eventos$ID == ID & eventos$Event == "saiu" & eventos$Patch == patches[ind,2], ]$Event <- "e"
+				saiu <- saidas[saidas$Patch==patches2[ind] & saidas$ID==ID,]
+				saidas <- saidas[saidas$Patch!=patches2[ind] | saidas$ID!=ID,]
+				eventosEvent[saiu$nlin] <- 4
 			}
 			
 			patchPop[p+1] <- patchPop[p+1] - 1
 
-			if(length(IDlist)>2)
-			{
-				patches<-patches[-ind,]
-				IDlist<-IDlist[-ind]
-			}
-			else
-			{
-					patches<-patches[-ind,]
-					patches<-matrix(patches, nrow=1, ncol=3)
-					IDlist<-IDlist[-ind]
-			}
 		}
 
 		lin = readLines(dados, n=1)
@@ -147,6 +171,9 @@ eventos<-function(arquivo, npop){
 	arqab <- paste0("eventos/abundancia-", out)
 	arqtaxas <- paste0("eventos/eventos-", out)
 
+	eventosEvent <- ordered(eventosEvent, levels=c(-1,1,2,3,4,5,6))
+	levels(eventosEvent) <- c("z", "b", "d", "i", "e", "saiu", "entrou")
+	eventos <- data.frame(t = eventost, ID = eventosID, Event = eventosEvent, Patch = eventosPatch, N = eventosN)
 	write.csv(eventos[eventos$t >=5,], arqtaxas, row.names=FALSE)
 	
 	file.create(arqab)
