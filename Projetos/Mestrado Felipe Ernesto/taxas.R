@@ -20,14 +20,6 @@ for(j in HabFrag)
 	  
 	      arquivo <- paste(LHS,"/eventos/eventos-output-", f, "_", h, "_", conf, "_", l, ".txt", sep="")
 	      x <- read.csv(arquivo)
-				#levels(x$Event) <- c("b", "d", "i", "e", "saiu", "entrou")
-	      
-				arqarea <- file(paste(LHS,"/output/output-", f, "_", h, "_", conf, "_", l, ".txt", sep=""))
-				areas <- readLines(arqarea, n=5)[5]
-				areas <- as.double(unlist(strsplit(areas, " "))[-c(1,2)])
-				close(arqarea)
-				#area <- c(512*512*0.03*0.03 - sum(area), area)
-				#x$N <-x$N/area[x$Patch]
 				
 	      frags <- rev(as.integer(names(sort(table(x$Patch[x$Patch>0])))))
 							
@@ -57,7 +49,6 @@ for(j in HabFrag)
 
 					
 	        ab <- sort(unique(F$N))
-					#df <- data.frame(rep=rep(k,length(ab)), p=rep(p, length(ab)), N = ab, b = unlist(tap2[])[seq(1, length(tap2[])*4, 4)]/tap, d = unlist(tap2[])[seq(2, length(tap2[])*4, 4)]/tap, i = unlist(tap2[])[seq(3, length(tap2[])*4, 4)]/tap, e = unlist(tap2[])[seq(4, length(tap2[])*4, 4)]/tap )
 					
 					if("b" %in% levels(F$Event))
 						taxab = eventosN[,"b"]/tN
