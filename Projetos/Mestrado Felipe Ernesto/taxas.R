@@ -68,11 +68,8 @@ for(j in HabFrag)
 						taxae = 0
 					
 					df <- data.frame(h=rep(i, length(ab)), f=rep(j, length(ab)), conf=rep(k,length(ab)), rep=rep(l,length(ab)), p=rep(p, length(ab)), N = ab, deltat = tN, b = taxab, d = taxad, i = taxai, e = taxae )
-					minev = 10
-					if(length(df$b[df$b>0]) >= minev & length(df$d[df$d>0]) >= minev & length(df$i[df$i>0]) >= minev & length(df$e[df$e>0]) >= minev)
-					{	
-						taxas <- rbind(taxas, df)
-					}
+					taxas <- rbind(taxas, df)
+					
 	      }
 			}
     }
