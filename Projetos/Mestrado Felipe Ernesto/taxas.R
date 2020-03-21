@@ -67,9 +67,12 @@ for(j in HabFrag)
 					else
 						taxae = 0
 					
-					df <- data.frame(h=rep(i, length(ab)), f=rep(j, length(ab)), conf=rep(k,length(ab)), rep=rep(l,length(ab)), p=rep(p, length(ab)), N = ab, deltat = tN, b = taxab, d = taxad, i = taxai, e = taxae )
-					taxas <- rbind(taxas, df)
-					
+					minN <- 10
+					if(length(ab) >= minN)
+					{
+						df <- data.frame(h=rep(i, length(ab)), f=rep(j, length(ab)), conf=rep(k,length(ab)), rep=rep(l,length(ab)), p=rep(p, length(ab)), N = ab, deltat = tN, b = taxab, d = taxad, i = taxai, e = taxae )
+						taxas <- rbind(taxas, df)
+					}
 	      }
 			}
     }
