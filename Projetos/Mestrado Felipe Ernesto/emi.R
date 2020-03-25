@@ -51,17 +51,17 @@ modelsemi <- list(modl = modl, modh = modh, mode=mode, modlog=modlog)
 aicemi <- AICtab(modl, modlog, modh, mode)
 class(aicemi) <- "data.frame"
 
-mode2 <- glm(E ~ area, data=fitemi, family=Gamma(link="log"))
-modlog2 <- glm(E ~ log(area), data=fitemi, family=Gamma(link="identity"))
-modh2 <- glm(E ~ log(area), data=fitemi, family=Gamma(link="log"))
-modl2 <- glm(E ~ area, data=fitemi, family=Gamma(link="identity"))
-modelsemi2 <- list(modl2 = modl2, modh2 = modh2, mode2=mode2, modlog2=modlog2)
-aicemi2 <- AICtab(modl2, modlog2, modh2, mode2)
-class(aicemi2) <- "data.frame"
+# mode2 <- glm(E ~ area, data=fitemi, family=Gamma(link="log"))
+# modlog2 <- glm(E ~ log(area), data=fitemi, family=Gamma(link="identity"))
+# modh2 <- glm(E ~ log(area), data=fitemi, family=Gamma(link="log"))
+# modl2 <- glm(E ~ area, data=fitemi, family=Gamma(link="identity"))
+# modelsemi2 <- list(modl2 = modl2, modh2 = modh2, mode2=mode2, modlog2=modlog2)
+# aicemi2 <- AICtab(modl2, modlog2, modh2, mode2)
+# class(aicemi2) <- "data.frame"
 
 write.csv(fitemi, file=paste(LHS,"/fit/fitemi.csv", sep=""))
 write.csv(aicemi, file=paste(LHS,"/fit/aicemi.csv", sep=""))
 save(modelsemi, file=paste(LHS,"/fit/modelsemi.rdata", sep=""))
 
-write.csv(aicemi2, file=paste(LHS,"/fit/aicemi2.csv", sep=""))
-save(modelsemi2, file=paste(LHS,"/fit/modelsemi2.rdata", sep=""))
+# write.csv(aicemi2, file=paste(LHS,"/fit/aicemi2.csv", sep=""))
+# save(modelsemi2, file=paste(LHS,"/fit/modelsemi2.rdata", sep=""))
