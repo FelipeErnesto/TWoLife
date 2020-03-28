@@ -51,19 +51,19 @@ for(j in HabFrag)
 	        ab <- sort(unique(F$N))
 					
 					if("b" %in% levels(F$Event))
-						taxab = eventosN[,"b"]/tN
+						taxab = eventosN[,"b"][tN>0]/tN[tN>0]
 					else
 						taxab = 0
 					if("d" %in% levels(F$Event))
-						taxad = eventosN[,"d"]/tN
+						taxad = eventosN[,"d"][tN>0]/tN[tN>0]
 					else
 						taxad = 0
 					if("i" %in% levels(F$Event))
-						taxai = eventosN[,"i"]/tN
+						taxai = eventosN[,"i"][tN>0]/tN[tN>0]
 					else
 						taxai = 0
 					if("e" %in% levels(F$Event))
-						taxae = eventosN[,"e"]/tN
+						taxae = eventosN[,"e"][tN>0]/tN[tN>0]
 					else
 						taxae = 0
 					
