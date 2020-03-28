@@ -49,6 +49,7 @@ for(j in HabFrag)
 
 					
 	        ab <- sort(unique(F$N))
+					ab <- ab[tN>0]
 					
 					if("b" %in% levels(F$Event))
 						taxab = eventosN[,"b"][tN>0]/tN[tN>0]
@@ -66,6 +67,8 @@ for(j in HabFrag)
 						taxae = eventosN[,"e"][tN>0]/tN[tN>0]
 					else
 						taxae = 0
+					
+					tN <- tN[tN>0]
 					
 					minN <- 10
 					if(length(ab) >= minN)
