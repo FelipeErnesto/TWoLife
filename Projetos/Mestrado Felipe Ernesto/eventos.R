@@ -15,7 +15,9 @@ eventos<-function(arquivo, npop){
 	eventosID <- as.integer(rep(-1, nlines))
 	eventosEvent <- as.integer(rep(-1, nlines))
 	eventosPatch <- as.integer(rep(-1, nlines))
+	eventosSD <- as.integer(rep(-1, nlines))
 	eventosN <- as.integer(rep(-1, nlines))
+	eventosSDN <- as.integer(rep(-1, nlines))
 	patchPop <- rep(0, npatches+1)
 	saidas <- data.frame(t=c(), Patch=c(), ID=c(), nlin=c())
 
@@ -57,6 +59,8 @@ eventos<-function(arquivo, npop){
 				saiu <- saidas[saidas$Patch==patches2[ind] & saidas$ID==ID,]
 				saidas <- saidas[saidas$Patch!=patches2[ind] | saidas$ID!=ID,]
 				eventosEvent[saiu$nlin] <- 4
+				eventosSD[saiu$nlin] <- patches1[ind]
+				eventosSDN[saiu$nlin] <- patchPop[patches1[ind]+1]
 			}
 			
 			patchPop[p+1] <- patchPop[p+1] - 1
@@ -93,13 +97,17 @@ eventos<-function(arquivo, npop){
 						eventosID[nlin] <- ID
 						eventosEvent[nlin] <- 4
 						eventosPatch[nlin] <- patches2[ind]
+						eventosSD[nlin] <- patches1[ind]
 						eventosN[nlin] <- patchPop[patches2[ind]+1]
+						eventosSDN[nlin] <- patchPop[patches1[ind]+1]
 						nlin <- nlin + 1
 						eventost[nlin] <- t
 						eventosID[nlin] <- ID
 						eventosEvent[nlin] <- 3
 						eventosPatch[nlin] <- patches1[ind]
+						eventosSD[nlin] <- patches2[ind]
 						eventosN[nlin] <- patchPop[patches1[ind]+1]
+						eventosSDN[nlin] <- patchPop[patches2[ind]+1]
 						nlin <- nlin + 1
 					}
 					
@@ -111,9 +119,13 @@ eventos<-function(arquivo, npop){
 						eventosID[nlin] <- ID
 						eventosEvent[nlin] <- 3
 						eventosPatch[nlin] <- patches1[ind]
+						eventosSD[nlin] <- patches3[ind]
 						eventosN[nlin] <- patchPop[patches1[ind]+1]
+						eventosSDN[nlin] <- patchPop[patches3[ind]+1]
 						nlin <- nlin + 1
 						eventosEvent[saiu$nlin] <- 4
+						eventosSD[saiu$nlin] <- patches1[ind]
+						eventosSDN[saiu$nlin] <- patchPop[patches1[ind]+1]
 					}
 					else if(patches3[ind]==patches1[ind])
 					{
@@ -151,7 +163,9 @@ eventos<-function(arquivo, npop){
 				eventosID[nlin] <- ID
 				eventosEvent[nlin] <- 4
 				eventosPatch[nlin] <- patches1[ind]
+				eventosSD[nlin] <- -10
 				eventosN[nlin] <- patchPop[patches1[ind]+1]
+				eventosSDN[nlin] <- -100
 				nlin <- nlin + 1
 			}
 			else if(patches1[ind]==0 & patches2[ind]>0)
@@ -159,6 +173,8 @@ eventos<-function(arquivo, npop){
 				saiu <- saidas[saidas$Patch==patches2[ind] & saidas$ID==ID,]
 				saidas <- saidas[saidas$Patch!=patches2[ind] | saidas$ID!=ID,]
 				eventosEvent[saiu$nlin] <- 4
+				eventosSD[saiu$nlin] <- -10
+				eventosSDN[saiu$nlin] <- -100
 			}
 			
 			patchPop[p+1] <- patchPop[p+1] - 1
@@ -173,7 +189,7 @@ eventos<-function(arquivo, npop){
 
 	eventosEvent <- ordered(eventosEvent, levels=c(-1,1,2,3,4,5,6))
 	levels(eventosEvent) <- c("z", "b", "d", "i", "e", "saiu", "entrou")
-	eventos <- data.frame(t = eventost, ID = eventosID, Event = eventosEvent, Patch = eventosPatch, N = eventosN)
+	eventos <- data.frame(t = eventost, ID = eventosID, Event = eventosEvent, Patch = eventosPatch, SD = eventosSD, N = eventosN, SDN = eventosSDN)
 	write.csv(eventos[eventos$t >=5,], arqtaxas, row.names=FALSE)
 	
 	file.create(arqab)

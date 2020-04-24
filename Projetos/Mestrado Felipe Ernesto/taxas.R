@@ -6,8 +6,9 @@ Replica <- 1:5
 
 for(j in HabFrag)
 {
-	taxas <- data.frame(h = c(), f=c(), conf= c(), rep = c(), p =c (), N = c(), deltat = c(), b = c(), d = c(), i = c(), e = c())
-	abund <- data.frame(h = c(), f=c(), conf= c(), rep = c(), p = c(), meanN = c())
+	taxas <- data.frame(h = c(), f = c(), conf= c(), rep = c(), p = c(), N = c(), deltat = c(), b = c(), d = c(), i = c(), e = c())
+	trocas <- data.frame(h = c(), f = c(), conf= c(), rep = c(), sp = c(), dp = c(), frac = c())
+	abund <- data.frame(h = c(), f =c(), conf= c(), rep = c(), p = c(), meanN = c())
 	for(i in HabProp)
 	{
 		for(k in Conf)
@@ -33,6 +34,8 @@ for(j in HabFrag)
 					}
 	        F["diff"] <- c(-1, diff(F$t))
 					F <- F[-1,]
+					
+					Fe <- F[F$Event=="e",]
 					
 					tN <- tapply(F$diff, F$N, sum)
 					
@@ -76,11 +79,18 @@ for(j in HabFrag)
 						df <- data.frame(h=rep(i, length(ab)), f=rep(j, length(ab)), conf=rep(k,length(ab)), rep=rep(l,length(ab)), p=rep(p, length(ab)), N = ab, deltat = tN, b = taxab, d = taxad, i = taxai, e = taxae )
 						taxas <- rbind(taxas, df)
 					}
+					
+					frac <- table(Fe$SD)/sum(table(Fe$SD))
+					if(length(frac)>0)
+					{
+						trocas <- rbind(trocas, data.frame(h=rep(i, length(frac)), f=rep(j, length(frac)), conf=rep(k, length(frac)), rep=rep(l, length(frac)), sp=rep(p, length(frac)), dp=as.integer(names(frac)), frac=as.double(frac)))
+					}
 	      }
 			}
     }
   }
 }
 dir.create(paste(LHS, "/taxas", sep=""))
-write.csv(file=paste(LHS,"/taxas/taxas.csv", sep=""), x=taxas)
-write.csv(file=paste(LHS,"/taxas/abund.csv", sep=""), x=abund)
+write.csv(file=paste(LHS,"/taxas/taxas.csv", sep=""), x=taxas, row.names=FALSE)
+write.csv(file=paste(LHS,"/taxas/abund.csv", sep=""), x=abund, row.names=FALSE)
+write.csv(file=paste(LHS,"/taxas/trocas.csv", sep=""), x=trocas, row.names=FALSE)
